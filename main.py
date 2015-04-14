@@ -6,4 +6,4 @@ from icomin import IcomIn
 
 
 bcdout = BcdOut(1,2,3,4)
-print bcdout
+print bcdout.writeBand(160)
