@@ -37,6 +37,7 @@ while True:
 	if (logic == "first_one_wins"):
 
 		if clear == True:
+			print "Nessuno trasmetteva"
 			# nessuno stava trasmettendo.
 			if pttA == True:
 				clear = False
@@ -53,12 +54,13 @@ while True:
 					print "Richiesta di TX da Radio B"
 					print "Inibisco radio A e faccio procedura TX"
 		else:
+			print "Tx attiva per ", txing
 			# qualcuno trasmetteva
 			if txing == "A":
 				#stava trasmettendo A
 				if pttA == False:
 					#A ha appena finito di trasmettere
-					print "Procedura per ripristino ascolto"
+					print "Procedura per ripristino ascolto (fine A)"
 
 					clear = True
 					txing = ""
@@ -66,7 +68,7 @@ while True:
 			else:
 				# stava trasmettendo B
 				if pttB == False:
-					print "Procedura per ripristino ascolto"
+					print "Procedura per ripristino ascolto (fine B)"
 					clear = True
 					txing = ""		
 
