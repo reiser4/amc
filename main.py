@@ -15,8 +15,8 @@ from radio import Radio
 icomin = IcomIn("P9_33")
 band = Band(icomin)
 settings = Settings()
-radioa = Radio()
-radiob = Radio()
+radioa = Radio("P9_15", "P9_29", "P8_8", "P8_7", "P8_9", "P8_11")
+radiob = Radio("P9_17", "P9_31", "P8_10", "P8_13", "P8_15", "P8_17")
 
 txing = ""
 clear = True

@@ -4,9 +4,9 @@
 # gestisce l'interfaccia con i due transceiver a livello di PTT e interlock.
 
 class Radio:
-	def __init__ (self, inhibitInPin, inhibitOutPin, pttIn, pttOut, pttOutD1, pttOutD2)
+	def __init__ (self, inhibitInPin, inhibitOutPin, pttIn, pttOut, pttOutD1, pttOutD2):
 		print "Inizializzata Radio con pin: ", inhibitInPin, inhibitOutPin, pttIn,
-			pttOut, pttOutD1, pttOutD2
+		pttOut, pttOutD1, pttOutD2
 
 		self.inhibitInPin = inhibitInPin
 		self.inhibitOutPin = inhibitOutPin
