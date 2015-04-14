@@ -1,5 +1,7 @@
 
 
+import Adafruit_BBIO.GPIO as GPIO
+
 ### Radio
 # gestisce l'interfaccia con i due transceiver a livello di PTT e interlock.
 
@@ -15,11 +17,12 @@ class Radio:
 		self.pttOutD1 = pttOutD1
 		self.pttOutD2 = pttOutD2
 
-		GPIO.setup(pttIn, GPIO.IN, PUD_UP)
+		GPIO.setup(pttIn, GPIO.IN, GPIO.PUD_UP)
 
 	def readPTT(self):
 		val = GPIO.input(self.pttIn)
 		print "Valore PTT: ", val
-		return val
-		#print "Lettura PTT non implementata"
-		#return False
+		if val == 1:
+			return False
+		else:
+			return True
