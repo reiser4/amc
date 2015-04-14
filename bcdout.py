@@ -12,6 +12,6 @@ class BcdOut:
 		self.pinC = pinC
 		self.pinD = pinD
 
-	def writeBand(band):
+	def writeBand(self, band):
 		print "Da fare: scrittura banda su piedini ", pinA, " ", pinB, " ", pinC, " ", pinD, " "
 
