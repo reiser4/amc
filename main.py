@@ -31,7 +31,7 @@ while True:
 
 	if (logic == "first_one_wins"):
 
-		if clear = True:
+		if clear == True:
 			# nessuno stava trasmettendo.
 			if pttA == True:
 				clear = False
@@ -71,4 +71,3 @@ while True:
 
 
 
-		
