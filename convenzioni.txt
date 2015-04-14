@@ -1,0 +1,7 @@
+
+
+
+
+nomi delle classi cammellanti (es: IcomIn)
+nomi dei file con trattino
+funzioni di lettura e scrittura: writeFunzione, readFunzione (es: writeBand, readBand)

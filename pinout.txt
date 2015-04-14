@@ -1,0 +1,49 @@
+
+
+
+
+PEDINATURA
+
+
+
+
+P9_11 port B FTDI 232 tx
+P9_12 LED shift register DATA OUT
+P9_13 port B ftdi 232 rx
+P9_14 led shift reg sck
+P9_15 inh in A
+P9_16 led shirf reg rck
+P9_17 inh in B
+P9_18 BCD A OUT
+
+P9_22 BCD B OUT
+P9_23 relay shift reg data out
+P9_24 port A ftdi 232 tx
+P9_25 relay shift reg sck
+P9_26 port A ftdi 232 rx
+P9_27 relay shift reg rck
+P9_28 bcd c out
+P9_29 inh out a
+P9_30 bcd d out
+P9_31 int out b
+P9_33 icom voltage in
+P9_41 button 3 in
+P9_42 button 4 in
+
+
+
+P8_07 ptt a out
+P8_08 ptt a in
+P8_09 ptt a out delay 1
+P8_10 ptt b in
+P8_11 ptt a out delay 2
+P8_12 bcd a in
+P8_13 ptt b out
+P8_14 bcd b in
+P8_15 ptt b out delay 1
+P8_16 bcd c in
+P8_17 ptt b out delay 2
+P8_18 bcd d in
+P8_19 button 1 in
+
+P8_26 button 2 in

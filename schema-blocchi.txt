@@ -1,0 +1,36 @@
+
+
+
+
+
+
+
+
+	thread porte seriali (lettura e scrittura)
+
+	thread tastiere (lettura scrittura)
+
+	thread lcd (sola lettura)
+
+	thread leds (sola lettura) (meglio se a eventi)
+	thread relay
+
+	thread bottoni frontali
+
+	thread ethernet/interlock
+
+
+
+
+
+	file di configurazione in formato json (lo stesso che viene letto e scritto dal pc)
+
+
+
+
+	avvio: si inizializzano i rele` tutti spenti
+	poi si legge periodicamente la banda tramite BCD per decidere cosa abilitare
+
+
+
+
