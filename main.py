@@ -1,6 +1,7 @@
 
+import time
 
-import Adafruit_BBIO.GPIO as GPIO
+#import Adafruit_BBIO.GPIO as GPIO
 
 from bcdin import BcdIn
 from bcdout import BcdOut
@@ -9,12 +10,15 @@ from band import Band
 from settings import Settings
 from radio import Radio
 
-icomin = Icomin("P9_33")
-band = Band(icomin)
-clear = True
 
+
+icomin = IcomIn("P9_33")
+band = Band(icomin)
+settings = Settings()
 radioa = Radio()
 radiob = Radio()
+
+txing = ""
 
 while True:
 	### devo leggere la banda in cui mi trovo e scriverla sull'uscita del BCD.
@@ -69,5 +73,6 @@ while True:
 		print "Logica non first-one-wins non implementata."
 
 
+	time.sleep(1)
 
 
