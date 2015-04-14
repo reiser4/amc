@@ -5,3 +5,5 @@
 nomi delle classi cammellanti (es: IcomIn)
 nomi dei file con trattino
 funzioni di lettura e scrittura: writeFunzione, readFunzione (es: writeBand, readBand)
+
+banda specificata in soli metri (es: 160, 40, 10, 6)

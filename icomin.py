@@ -6,12 +6,10 @@
 
 class IcomIn:
 
-	def __init__(self, pinA, pinB, pinC, pinD):
-		self.pinA = pinA
-		self.pinB = pinB
-		self.pinC = pinC
-		self.pinD = pinD
+	def __init__(self, aPin):
+		self.aPin = aPin
+		print "Avviato icom band decoder (dummy) su pin", aPin
 
-
-	def readBand():
-		print "non implementato"
+	def readBand(self):
+		print "non implementato: restituisco sempre 40"
+		return 40
