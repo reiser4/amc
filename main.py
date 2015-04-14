@@ -19,6 +19,7 @@ radioa = Radio()
 radiob = Radio()
 
 txing = ""
+clear = True
 
 while True:
 	### devo leggere la banda in cui mi trovo e scriverla sull'uscita del BCD.
