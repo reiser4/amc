@@ -1,8 +1,8 @@
 
 
-from bcd-in import BcdIn
-from bcd-out import BcdOut
-from icom-in import IcomIn
+from bcdin import BcdIn
+from bcdout import BcdOut
+from icomin import IcomIn
 
 
 bcdout = BcdOut(1,2,3,4)
