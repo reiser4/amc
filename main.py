@@ -35,7 +35,7 @@ while True:
 	print "Stato: clear: ", clear, " txing: ", txing
 
 	if (logic == "first_one_wins"):
-
+		## logica in cui le due radio hanno la stessa priorita` e non possono trasmettere insieme
 		if clear == True:
 			print "Nessuno trasmetteva"
 			# nessuno stava trasmettendo.

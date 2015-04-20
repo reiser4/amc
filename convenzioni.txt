@@ -7,3 +7,39 @@ nomi dei file con trattino
 funzioni di lettura e scrittura: writeFunzione, readFunzione (es: writeBand, readBand)
 
 banda specificata in soli metri (es: 160, 40, 10, 6)
+
+
+configurazione "statica" (quella letta e scritta dall'appl. sul pc):
+
+{
+	"Configuration":{
+		"Relay":{
+			"160":{
+				"1":{
+			  		"Label":"Nord America",
+					"RelayA":{
+						"Rx":"10000000",
+						"Tx":"00100000"
+					},
+					"RelayB":{
+						"Rx":"01000000",
+						"Tx":"00010000"
+					}
+				},
+				"2":{
+					"Label":"Europa",
+					"RelayA":{
+						"Rx":"10000000",
+						"Tx":"00100000"
+					},
+					"RelayB":{
+						"Rx":"01000000",
+						"Tx":"00010000"
+					}
+				}
+				.... altri preset ....
+			}
+			.... altre bande ....
+		}
+	}
+}
