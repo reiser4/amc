@@ -20,7 +20,7 @@ Stato attuale:
 
 <script>
 
-setTimeout("500",function() {
+setInterval(function() {
 
 	$.ajax({
 		url: "/state.php",
@@ -28,6 +28,6 @@ setTimeout("500",function() {
 		$('#status').html(data);
 	})
 
-});
+}, 500);
 
 </script>

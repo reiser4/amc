@@ -7,7 +7,7 @@ print_r($status);
 
 ?><div class="verticaldiv"><?
 
-foreach ($i = 0; $i < strlen($status); $i++) {
+for ($i = 0; $i < 16; $i++) {
 
 	if ($i == 8) { ?></div><div class="verticaldiv"><? }
 
