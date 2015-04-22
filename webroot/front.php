@@ -5,41 +5,53 @@
 
 
 $leds = array(
-	"ANT_A_RX_1" => array("x" => 30,"y" => 30,"col" => "red"),
-        "ANT_A_RX_2" => array("x" => 30,"y" => 40,"col" => "red"),
-        "ANT_A_RX_3" => array("x" => 30,"y" => 50,"col" => "red"),
-        "ANT_A_RX_4" => array("x" => 30,"y" => 60,"col" => "red"),
-        "ANT_A_RX_5" => array("x" => 30,"y" => 70,"col" => "red"),
-        "ANT_A_RX_6" => array("x" => 30,"y" => 80,"col" => "red"),
-        "ANT_A_RX_7" => array("x" => 30,"y" => 90,"col" => "red"),
-        "ANT_A_RX_8" => array("x" => 30,"y" => 100,"col" => "red"),
+	"ANT_A_RX_1" => array("x" => 61,"y" => 62,"col" => "red"),
+        "ANT_A_RX_2" => array("x" => 61,"y" => 75,"col" => "red"),
+        "ANT_A_RX_3" => array("x" => 61,"y" => 88,"col" => "red"),
+        "ANT_A_RX_4" => array("x" => 61,"y" => 102,"col" => "red"),
+        "ANT_A_RX_5" => array("x" => 61,"y" => 116,"col" => "red"),
+        "ANT_A_RX_6" => array("x" => 61,"y" => 129,"col" => "red"),
+        "ANT_A_RX_7" => array("x" => 61,"y" => 143,"col" => "red"),
+        "ANT_A_RX_8" => array("x" => 61,"y" => 156,"col" => "red"),
 
-        "ANT_A_TX_1" => array("x" => 40,"y" => 30,"col" => "red"),
-        "ANT_A_TX_2" => array("x" => 40,"y" => 40,"col" => "red"),
-        "ANT_A_TX_3" => array("x" => 40,"y" => 50,"col" => "red"),
-        "ANT_A_TX_4" => array("x" => 40,"y" => 60,"col" => "red"),
-        "ANT_A_TX_5" => array("x" => 40,"y" => 70,"col" => "red"),
-        "ANT_A_TX_6" => array("x" => 40,"y" => 80,"col" => "red"),
-        "ANT_A_TX_7" => array("x" => 40,"y" => 90,"col" => "red"),
-        "ANT_A_TX_8" => array("x" => 40,"y" => 100,"col" => "red"),
+	"SPLIT_A_RX" => array("x" => 61,"y" => 177,"col" => "red"),
 
-	"ANT_B_RX_1" => array("x" => 90,"y" => 30,"col" => "red"),
-        "ANT_B_RX_2" => array("x" => 90,"y" => 40,"col" => "red"),
-        "ANT_B_RX_3" => array("x" => 90,"y" => 50,"col" => "red"),
-        "ANT_B_RX_4" => array("x" => 90,"y" => 60,"col" => "red"),
-        "ANT_B_RX_5" => array("x" => 90,"y" => 70,"col" => "red"),
-        "ANT_B_RX_6" => array("x" => 90,"y" => 80,"col" => "red"),
-        "ANT_B_RX_7" => array("x" => 90,"y" => 90,"col" => "red"),
-        "ANT_B_RX_8" => array("x" => 90,"y" => 100,"col" => "red"),
+        "ANT_A_TX_1" => array("x" => 82,"y" => 62,"col" => "red"),
+        "ANT_A_TX_2" => array("x" => 82,"y" => 75,"col" => "red"),
+        "ANT_A_TX_3" => array("x" => 82,"y" => 88,"col" => "red"),
+        "ANT_A_TX_4" => array("x" => 82,"y" => 102,"col" => "red"),
+        "ANT_A_TX_5" => array("x" => 82,"y" => 116,"col" => "red"),
+        "ANT_A_TX_6" => array("x" => 82,"y" => 129,"col" => "red"),
+        "ANT_A_TX_7" => array("x" => 82,"y" => 143,"col" => "red"),
+        "ANT_A_TX_8" => array("x" => 82,"y" => 156,"col" => "red"),
 
-	"ANT_B_TX_1" => array("x" => 90,"y" => 30,"col" => "red"),
-        "ANT_B_TX_2" => array("x" => 90,"y" => 40,"col" => "red"),
-        "ANT_B_TX_3" => array("x" => 90,"y" => 50,"col" => "red"),
-        "ANT_B_TX_4" => array("x" => 90,"y" => 60,"col" => "red"),
-        "ANT_B_TX_5" => array("x" => 90,"y" => 70,"col" => "red"),
-        "ANT_B_TX_6" => array("x" => 90,"y" => 80,"col" => "red"),
-        "ANT_B_TX_7" => array("x" => 90,"y" => 90,"col" => "red"),
-        "ANT_B_TX_8" => array("x" => 90,"y" => 100,"col" => "red"),
+	"SPLIT_A_TX" => array("x" => 82, "y" => 177, "col" => "red"),
+
+	"NET_A" => array("x" => 165, "y" => 149, "col" => "red"),
+
+	"BAND_6" => array("x" => 248, "y" => 31, "col" => "red"),
+
+	"ANT_B_RX_1" => array("x" => 549,"y" => 62,"col" => "red"),
+        "ANT_B_RX_2" => array("x" => 549,"y" => 75,"col" => "red"),
+        "ANT_B_RX_3" => array("x" => 549,"y" => 88,"col" => "red"),
+        "ANT_B_RX_4" => array("x" => 549,"y" => 102,"col" => "red"),
+        "ANT_B_RX_5" => array("x" => 549,"y" => 116,"col" => "red"),
+        "ANT_B_RX_6" => array("x" => 549,"y" => 129,"col" => "red"),
+        "ANT_B_RX_7" => array("x" => 549,"y" => 143,"col" => "red"),
+        "ANT_B_RX_8" => array("x" => 549,"y" => 156,"col" => "red"),
+
+	"SPLIT_B_RX" => array("x" => 549,"y" => 177, "col" => "red"),
+
+	"ANT_B_TX_1" => array("x" => 570,"y" => 62,"col" => "red"),
+        "ANT_B_TX_2" => array("x" => 570,"y" => 75,"col" => "red"),
+        "ANT_B_TX_3" => array("x" => 570,"y" => 88,"col" => "red"),
+        "ANT_B_TX_4" => array("x" => 570,"y" => 102,"col" => "red"),
+        "ANT_B_TX_5" => array("x" => 570,"y" => 116,"col" => "red"),
+        "ANT_B_TX_6" => array("x" => 570,"y" => 129,"col" => "red"),
+        "ANT_B_TX_7" => array("x" => 570,"y" => 143,"col" => "red"),
+        "ANT_B_TX_8" => array("x" => 570,"y" => 156,"col" => "red"),
+
+	"SPLIT_B_TX" => array("x" => 570, "y" => 177, "col" => red),
 
 );
 
@@ -48,8 +60,8 @@ $leds = array(
 <div style="position: relative;">
 
 	<? foreach ($leds as $k => $v) { ?>
-		<div style="width: 10px; height: 10px; background-color: <?=$v['col'] ?>
-		left: <?=$v['x'] ?>; top: <?=$v['y'] ?>; position: absolute;"></div>
+		<div style="width: 10px; height: 10px; background-color: <?=$v['col'] ?>;
+		left: <?=$v['x'] ?>px; top: <?=$v['y'] ?>px; position: absolute; border-radius: 5px;"></div>
 	<? } ?>
 
 
