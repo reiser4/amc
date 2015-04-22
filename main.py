@@ -9,17 +9,19 @@ from icomin import IcomIn
 from band import Band
 from settings import Settings
 from radio import Radio
+from preset import Preset
+from front import Front
 
-
-
+front = Front()
 icomin = IcomIn("P9_33")
 band = Band(icomin)
 settings = Settings()
 radioa = Radio("P9_15", "P9_29", "P8_8", "P8_7", "P8_9", "P8_11")
 radiob = Radio("P9_17", "P9_31", "P8_10", "P8_13", "P8_15", "P8_17")
-
+preset = Preset()
 txing = ""
 clear = True
+lastband = "-1"
 
 while True:
 	### devo leggere la banda in cui mi trovo e scriverla sull'uscita del BCD.
@@ -27,7 +29,30 @@ while True:
 	### valutare se rallentare questa operazione
 
 	myband = band.readBand()
+	if myband != lastband:
+		# rilevato cambio banda!
+		front.changeBand(myband)
+	
 	logic = settings.readParam("Logic")
+
+	radioArx = "{0:b}".format(preset.readPresetFile("/tmp/radioArx.txt")).zfill(8)
+	radioAtx = "{0:b}".format(preset.readPresetFile("/tmp/radioAtx.txt")).zfill(8)
+	radioBrx = "{0:b}".format(preset.readPresetFile("/tmp/radioBrx.txt")).zfill(8)
+	radioBtx = "{0:b}".format(preset.readPresetFile("/tmp/radioBtx.txt")).zfill(8)
+
+	#todo: solo se preset cambiati
+	
+	front.changePreset("A","rx",radioArx)
+	front.changePreset("A","tx",radioAtx)
+	front.changePreset("B","rx",radioBrx)
+	front.changePreset("B","tx",radioBtx)
+	
+	#todo: solo se banda o preset cambiati
+
+	front.updateFront()
+
+
+	print "Presets: ", radioArx, radioAtx, radioBrx, radioBtx
 
 	pttA = radioa.readPTT()
 	pttB = radiob.readPTT()
