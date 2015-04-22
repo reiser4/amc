@@ -95,3 +95,10 @@
 
 
                 	<img src="front-off.jpg" />
+
+
+                	<br/>
+                	<br/>
+                	<center>
+                	Relay: <?=file_get_contents("/tmp/relay.txt"); ?>
+                	</center>

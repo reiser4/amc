@@ -11,7 +11,9 @@ from settings import Settings
 from radio import Radio
 from preset import Preset
 from front import Front
+from relay import Relay
 
+relay = Relay()
 front = Front()
 icomin = IcomIn("P9_33")
 band = Band(icomin)
@@ -22,6 +24,8 @@ preset = Preset()
 txing = ""
 clear = True
 lastband = "-1"
+
+
 
 while True:
 	### devo leggere la banda in cui mi trovo e scriverla sull'uscita del BCD.
@@ -46,13 +50,18 @@ while True:
 	front.changePreset("A","tx",radioAtx)
 	front.changePreset("B","rx",radioBrx)
 	front.changePreset("B","tx",radioBtx)
-	
+
 	#todo: solo se banda o preset cambiati
 
 	front.updateFront()
 
-
 	print "Presets: ", radioArx, radioAtx, radioBrx, radioBtx
+
+	settings.setPreset("A","rx",radioArx)
+	settings.setPreset("A","tx",radioAtx)
+	settings.setPreset("B","rx",radioBrx)
+	settings.setPreset("B","tx",radioBtx)
+	
 
 	pttA = radioa.readPTT()
 	pttB = radiob.readPTT()
@@ -70,6 +79,8 @@ while True:
 				# ora vuole trasmettere la radio A
 				print "Richiesta di TX da Radio A"
 				print "Devo inibire radio B e iniziare la procedura di TX"
+				relay.writeRelay(settings.getPreset("radioAtx"))
+
 			else:	
 				# radio A non vuole trasmettere.
 				if pttB == True:
@@ -78,6 +89,10 @@ while True:
 					# radio B vuole trasmettere
 					print "Richiesta di TX da Radio B"
 					print "Inibisco radio A e faccio procedura TX"
+					relay.writeRelay(settings.getPreset("radioBtx"))
+				else:
+					#sia A che B non vogliono trasmettere: ascolto
+					relay.writeRelay(settings.getPreset("rx"))
 		else:
 			print "Tx attiva per ", txing
 			# qualcuno trasmetteva
@@ -86,7 +101,7 @@ while True:
 				if pttA == False:
 					#A ha appena finito di trasmettere
 					print "Procedura per ripristino ascolto (fine A)"
-
+					relay.writeRelay(settings.getPreset("rx"))
 					clear = True
 					txing = ""
 
@@ -94,6 +109,7 @@ while True:
 				# stava trasmettendo B
 				if pttB == False:
 					print "Procedura per ripristino ascolto (fine B)"
+					relay.writeRelay(settings.getPreset("rx"))
 					clear = True
 					txing = ""		
 
