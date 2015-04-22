@@ -6,9 +6,30 @@
 	width:20px;
 	height:20px;
 	background: #eee;
+	margin-top: 2px;
 }
 .active {
 	background: forestGreen;
+	color: white;
+}
+.tx {
+	background: red;
+	color: white;
+}
+.verticaldiv {
+	width: 30px;
+	display: inline-block;
+	height: 160px;
+	float: left;
+}
+html {
+	font-family: verdana;
+}
+td {
+	border: 1px solid #ddd;
+}
+.pin {
+	width: 25px;
 }
 </style>
 
@@ -20,7 +41,7 @@ Stato attuale:
 
 <script>
 
-setTimeout("500",function() {
+setTimeout(function() {
 
 	$.ajax({
 		url: "/state.php",
@@ -28,6 +49,6 @@ setTimeout("500",function() {
 		$('#status').html(data);
 	})
 
-});
+}, 300);
 
 </script>

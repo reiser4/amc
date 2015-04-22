@@ -1,0 +1,13 @@
+
+
+Per non consumare la MMC inutilmente montare /tmp come ramdisk
+
+in /etc/fstab:
+
+tmpfs   /tmp         tmpfs   nodev,nosuid          0  0
+
+
+
+per usare il sito web, in /etc/lighttpd/lighttpd.conf
+
+server.document-root        = "/root/amc/webroot"
