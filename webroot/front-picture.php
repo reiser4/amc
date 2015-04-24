@@ -100,5 +100,21 @@
                 	<br/>
                 	<br/>
                 	<center>
-                	Relay: <?=file_get_contents("/tmp/relay.txt"); ?>
+                	Relay: <?
+
+
+                        $rstring = file_get_contents("/tmp/relay.txt"); 
+
+                        for ($i = 0; $i < strlen($rstring); $i++) {
+                                if ($rstring[$i] == "0") { $bg = "#eee"; $col = "black"; } else { $bg = "darkRed"; $col = "white"; }
+                        ?>
+                                <div style="display:inline-block;background:<?=$bg ?>;width: 25px; height: 25px; 
+                                color: <?=$col ?>; margin: 0px; font-size: 14pt;"><?=$i+1 ?></div>
+                        <?
+                        }
+                        ?>
                 	</center>
+
+
+
+
