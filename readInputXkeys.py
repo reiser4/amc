@@ -1,8 +1,24 @@
 import os
 from evdev import InputDevice, list_devices, categorize, ecodes
 from select import select
+from keyboardxkeys import HandlerKeyboards
+from time import sleep
 
 
+if __name__ == "__main__":
+    devices = [InputDevice(fn) for fn in list_devices()]
+    for dev in devices:
+        print dev
+
+    keyboard = HandlerKeyboards("usb-0000:04:00.0-2/input1")
+    print "\nIstanziata correttamente tastiera\n"
+    keyboard.startRead()
+    while 1:
+        sleep(10)
+        print "\n####################################################\n"
+
+
+'''
 def writeKeystate(file_pointer, message):
     file_pointer.seek(0)
     file_pointer.write(message)
@@ -14,7 +30,7 @@ def valueKeystate(value):
         return "0"
 
 
-devices = map(InputDevice, ("/dev/input/event2", "/dev/input/event14"))
+devices = map(InputDevice, ("/dev/input/event2", "/dev/input/event16"))
 devices = {dev.fd : dev for dev in devices}
 
 for dev in devices.values():
@@ -86,3 +102,4 @@ while True:
 
 f_keystate1.close()
 f_keystate2.close()
+'''
