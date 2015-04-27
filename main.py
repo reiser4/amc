@@ -18,8 +18,8 @@ front = Front()
 icomin = IcomIn("P9_33")
 band = Band(icomin)
 settings = Settings()
-radioa = Radio("P9_15", "P9_29", "P8_8", "P8_7", "P8_9", "P8_11")
-radiob = Radio("P9_17", "P9_31", "P8_10", "P8_13", "P8_15", "P8_17")
+radioa = Radio("P9_15", "P9_29", "P8_19", "P8_7", "P8_9", "P8_11")
+radiob = Radio("P9_17", "P9_31", "P8_26", "P8_13", "P8_15", "P8_17")
 preset = Preset()
 txing = ""
 clear = True
@@ -55,7 +55,7 @@ while True:
 
 	front.updateFront()
 
-	print "Presets: ", radioArx, radioAtx, radioBrx, radioBtx
+	#print "Presets: ", radioArx, radioAtx, radioBrx, radioBtx
 
 	settings.setPreset("A","rx",radioArx)
 	settings.setPreset("A","tx",radioAtx)
@@ -66,12 +66,12 @@ while True:
 	pttA = radioa.readPTT()
 	pttB = radiob.readPTT()
 
-	print "Stato: clear: ", clear, " txing: ", txing
+	#print "Stato: clear: ", clear, " txing: ", txing
 
 	if (logic == "first_one_wins"):
 		## logica in cui le due radio hanno la stessa priorita` e non possono trasmettere insieme
 		if clear == True:
-			print "Nessuno trasmetteva"
+			#print "Nessuno trasmetteva"
 			# nessuno stava trasmettendo.
 			if pttA == True:
 				clear = False
@@ -94,7 +94,7 @@ while True:
 					#sia A che B non vogliono trasmettere: ascolto
 					relay.writeRelay(settings.getPreset("rx"))
 		else:
-			print "Tx attiva per ", txing
+			#print "Tx attiva per ", txing
 			# qualcuno trasmetteva
 			if txing == "A":
 				#stava trasmettendo A
@@ -117,6 +117,6 @@ while True:
 		print "Logica non first-one-wins non implementata."
 
 
-	time.sleep(1)
+	#time.sleep(1)
 
 

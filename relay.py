@@ -20,6 +20,6 @@ class Relay:
 		front_file.close()
 
 		relaylist = list(configuration)
-		for i in range(0,16):
-			print "Relay numero ",i,": ",relaylist[i]
+		#for i in range(0,16):
+		#	print "Relay numero ",i,": ",relaylist[i]
 

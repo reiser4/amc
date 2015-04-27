@@ -44,15 +44,28 @@ for ($i = 0; $i < strlen($outbin); $i++) {
 
 
 ?>
+<?
+
+function printStnData($file) {
+	if (!file_exists($file)) { return; }
+	$data = json_decode(file_get_contents($file));
+        ?>
+        Banda: <?=$data->band ?><br/>
+        Frequenza: <?=$data->freq ?><br/>
+        Modo: <?=$data->mode ?><br/>
+        Tipo: <?=$data->role ?><?
+
+}
+?>
 
   <tr>
-        <td rowspan="9"><h2>A</h2></td>
-        <td>RX: <?=$rxA+1 ?></td> 
+        <td rowspan="9"><h2>A</h2><? printStnData("/tmp/STNK3A.txt"); ?></td>
+	<td>RX: <?=$rxA+1 ?></td>
         <td>TX: <?=$txA+1 ?></td>
         <td>Antenna</td>
         <td>RX: <?=$rxB+1 ?></td>
         <td>TX: <?=$txB+1 ?></td>
-        <td rowspan="9"><h2>B</h2></td>
+        <td rowspan="9"><h2>B</h2><? printStnData("/tmp/STNK3B.txt"); ?></td>
         </tr>
 
 <?

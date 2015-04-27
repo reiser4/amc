@@ -11,5 +11,5 @@ class IcomIn:
 		print "Avviato icom band decoder (dummy) su pin", aPin
 
 	def readBand(self):
-		print "non implementato: restituisco sempre 40"
+		#print "non implementato: restituisco sempre 40"
 		return 40

@@ -31,7 +31,7 @@ class Settings:
 	def setPreset(self, radio, type, preset):
 
 		presetbits = list(preset)
-		print presetbits
+		#print presetbits
 		# se ricevo un preset di ricezione sovrascrivo la parte corrispondente di rx
 		if type == "rx":
 			if radio == "A":

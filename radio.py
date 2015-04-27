@@ -21,7 +21,7 @@ class Radio:
 
 	def readPTT(self):
 		val = GPIO.input(self.pttIn)
-		print "Valore PTT: ", val
+		#print "Valore PTT: ", val
 		if val == 1:
 			return False
 		else:
