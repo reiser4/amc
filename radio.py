@@ -7,8 +7,7 @@ import Adafruit_BBIO.GPIO as GPIO
 
 class Radio:
 	def __init__ (self, inhibitInPin, inhibitOutPin, pttIn, pttOut, pttOutD1, pttOutD2):
-		print "Inizializzata Radio con pin: ", inhibitInPin, inhibitOutPin, pttIn,
-		pttOut, pttOutD1, pttOutD2
+		print "Inizializzata Radio con pin: ", inhibitInPin, inhibitOutPin, pttIn, pttOut, pttOutD1, pttOutD2
 
 		self.inhibitInPin = inhibitInPin
 		self.inhibitOutPin = inhibitOutPin
