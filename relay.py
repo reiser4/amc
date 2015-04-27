@@ -31,7 +31,7 @@ class Relay:
 		relaylist = list(configuration)
 		for i in range(0,16):
 			if relayPins[i] != "":
-				if relaylist[i] == 0:
+				if relaylist[i] == '0':
 					GPIO.output(relayPins[i], GPIO.HIGH)
 				else:		
 					GPIO.output(relayPins[i], GPIO.LOW)
