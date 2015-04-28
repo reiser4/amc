@@ -93,6 +93,9 @@
                         }
                         } ?>
 
+			<div style="position: absolute; left: 225px; top: 71px;">
+			<img src="display.png" style="width: 189px;" /></div>
+
 
                 	<img src="front-off.jpg" />
 
