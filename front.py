@@ -1,4 +1,5 @@
 
+from atomicwrite import AtomicWrite
 
 ### classe front: gestione del frontale (display e leds)
 
@@ -64,7 +65,8 @@ class Front:
 			outbytes.append(chr(value))
 			c += 8
 
-		front_file = open("/tmp/sr_led.txt", "w")
-		front_file.write(''.join(outbytes))
-		front_file.close()
+		AtomicWrite.writeFile("/tmp/sr_led.txt", ''.join(outbytes))
+		#front_file = open("/tmp/sr_led.txt", "w")
+		#front_file.write(''.join(outbytes))
+		#front_file.close()
 

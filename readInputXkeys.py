@@ -10,7 +10,8 @@ if __name__ == "__main__":
     for dev in devices:
         print dev
 
-    keyboard = HandlerKeyboards("usb-0000:04:00.0-2/input1")
+    ##keyboard = HandlerKeyboards("usb-0000:04:00.0-2/input1")
+    keyboard = HandlerKeyboards("usb-musb-hdrc.1.auto-1.2/input1")
     print "\nIstanziata correttamente tastiera\n"
     keyboard.startRead()
     while 1:
@@ -30,7 +31,7 @@ def valueKeystate(value):
         return "0"
 
 
-devices = map(InputDevice, ("/dev/input/event2", "/dev/input/event16"))
+devices = map(InputDevice, ("/dev/input/event1", "/dev/input/event2"))
 devices = {dev.fd : dev for dev in devices}
 
 for dev in devices.values():
