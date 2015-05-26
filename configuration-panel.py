@@ -13,30 +13,40 @@ class ConfigurationPanel(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        self.bands = ["6m", "10m", "12m", "15m", "17m", "20m", "40m", "80m", "160m"]
+        self.bands = ["6m", "10m", "12m", "15m", "17m", "20m", "30m", "40m", "60m", "80m", "160m"]
+        # imposto le dimensioni della finestra
         self.setGeometry(0, 0, 1500, 600)
+        # imposto il titolo della finestra
         self.setWindowTitle("Configuration Panel")
+        # sposta la finestra al centro del desktop
         self.centerOnScreen()
 
+        # creo le azioni che usero' in seguito
         self.initAction()
+        # creo il menu'
         self.initMenuBar()
+        # creo le tab ed il loro contenuto
         self.initTab()
 
-
+        # imposta il widget dato come widget centrale della finestra principale
         self.setCentralWidget(self.tab_widget)
+        # visualizzo il widget
         self.show()
+        # visualizzo la scritta 'Ready' nella status bar
         self.statusBar().showMessage("Ready")
 
     def initAction(self):
-        # creo l'azione per uscire
+        # azione per uscire dall'applicazione
         self.exitAction = QAction(QIcon("icons/exit.png"), "&Exit", self)
         self.exitAction.setShortcut("Ctrl+Q")
         self.exitAction.setStatusTip("Exit application")
+        # collego l'azione exitAction all'evento self.close (gia' presente in PyQT)
         self.exitAction.triggered.connect(self.close)
         # azione per caricare il file
         self.openAction = QAction("&Load to file", self)
         self.openAction.setShortcut("Ctrl+L")
         self.openAction.setStatusTip("Load to file")
+        # collego l'azione openAction al mio evento che ho creato showDialog
         self.openAction.triggered.connect(self.showDialog)
         """
         serialAction = QAction("&Serial", self)
@@ -65,7 +75,7 @@ class ConfigurationPanel(QMainWindow):
         # creo il menu ed aggiungo i vari campi
         menubar = self.menuBar()
         filemenu = menubar.addMenu("&File")
-        filemenu.addSeparator()
+        #filemenu.addSeparator()
         # aggancio al menu il comando per uscire
         filemenu.addAction(self.exitAction)
 
@@ -74,6 +84,7 @@ class ConfigurationPanel(QMainWindow):
         connection_menu = menubar.addMenu("&Connection")
 
     def initTab(self):
+        # creo un TabWidget che sara' il widget padre
         self.tab_widget = QTabWidget(self)
         labels_name = ["Active", "Label", "Bands"]
         tab_list = list()
@@ -83,9 +94,15 @@ class ConfigurationPanel(QMainWindow):
         radio1cb_matrix = list()
         radio2cb_matrix = list()
         for i in range(len(self.bands)):
+            # aggiungo alla lista un oggeto QWidget discedente dal padre
             tab_list.append(QWidget(self.tab_widget))
+            # per ogni nome band aggiungo una tab nella list che
+            # sara' visualizzata nella finestra principale
             self.tab_widget.addTab(tab_list[i], self.bands[i])
+            # aggiungo alla lista un oggeto per il layout a griglia discedente
+            # dalla i-esima tab
             self.tablayout_list.append(QGridLayout(tab_list[i]))
+            # nella i-esima tab creo un layout a griglia e posiziono i vari elementi
             self.tablayout_list[i].addWidget(QLabel("Active", tab_list[i]), 0, 0)
             self.tablayout_list[i].addWidget(QLabel("Label", tab_list[i]), 0, 1)
             self.tablayout_list[i].addWidget(QLabel("Radio 1", tab_list[i]), 0, 2, 1, 25)
@@ -94,6 +111,7 @@ class ConfigurationPanel(QMainWindow):
             labels_matrix.append(list())
             radio1cb_matrix.append(list())
             radio2cb_matrix.append(list())
+            # per ogni tab devo creare tutti i suoi oggetti al suo interno
             for y in range(16):
                 checkbox_matrix[i].append(QCheckBox(tab_list[i]))
                 checkbox_matrix[i][y].stateChanged.connect(self.changeCheckBoxState)
@@ -106,11 +124,10 @@ class ConfigurationPanel(QMainWindow):
                     radio1cb_matrix[i][y].append(QCheckBox(tab_list[i]))
                     radio1cb_matrix[i][y][z].stateChanged.connect(self.changeCheckBoxState)
                     self.tablayout_list[i].addWidget(radio1cb_matrix[i][y][z], y+1, z+2)
-                for z in range(24):
+
                     radio2cb_matrix[i][y].append(QCheckBox(tab_list[i]))
                     radio2cb_matrix[i][y][z].stateChanged.connect(self.changeCheckBoxState)
                     self.tablayout_list[i].addWidget(radio2cb_matrix[i][y][z], y+1, z+27)
-
 
 
     def centerOnScreen(self):
@@ -142,6 +159,7 @@ class ConfigurationPanel(QMainWindow):
         self.statusBar().showMessage(sender.text() + ' was pressed')
 
     def showDialog(self):
+        # apre una finestra di selezione in /home dove e' possibile selezionare solo file py
         fname = QFileDialog.getOpenFileName(self, 'Load file', '/home', "Python Files (*.py)")
         print fname[0]
         f = open(fname[0], 'r')
@@ -151,6 +169,10 @@ class ConfigurationPanel(QMainWindow):
         f.close()
 
     def changeCheckBoxState(self, state):
+        '''
+        Funzione che stampa a terminale tutte le volte che viene cliccata
+        una checkbox
+        '''
         if state == Qt.Checked:
             sender = self.sender()
             self.statusBar().showMessage(sender.text())
@@ -171,4 +193,5 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     configuration_panel = ConfigurationPanel()
     configuration_panel.show()
+    # l'applicazione rimane in loop
     sys.exit(app.exec_())
