@@ -17,7 +17,7 @@ class ConfigurationPanel(QMainWindow):
         # imposto le dimensioni della finestra
         self.setGeometry(0, 0, 1500, 600)
         # imposto il titolo della finestra
-        self.setWindowTitle("Configuration Panel")
+        self.setWindowTitle("AMC Configuration Panel")
         # sposta la finestra al centro del desktop
         self.centerOnScreen()
 
@@ -94,12 +94,12 @@ class ConfigurationPanel(QMainWindow):
         radio1cb_matrix = list()
         radio2cb_matrix = list()
         for i in range(len(self.bands)):
-            # aggiungo alla lista un oggeto QWidget discedente dal padre
+            # aggiungo alla lista un oggetto QWidget discendente dal padre
             tab_list.append(QWidget(self.tab_widget))
             # per ogni nome band aggiungo una tab nella list che
             # sara' visualizzata nella finestra principale
             self.tab_widget.addTab(tab_list[i], self.bands[i])
-            # aggiungo alla lista un oggeto per il layout a griglia discedente
+            # aggiungo alla lista un oggetto per il layout a griglia discendente
             # dalla i-esima tab
             self.tablayout_list.append(QGridLayout(tab_list[i]))
             # nella i-esima tab creo un layout a griglia e posiziono i vari elementi
@@ -134,7 +134,7 @@ class ConfigurationPanel(QMainWindow):
         '''
         Centers the window on the screen.
         '''
-        # prende le dimesioni della finestra
+        # prende le dimensioni della finestra
         qr = self.frameGeometry()
         # prende il punto centrale del display date le sue dimensioni
         cp = QDesktopWidget().availableGeometry().center()
