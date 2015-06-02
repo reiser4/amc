@@ -161,11 +161,11 @@ class ConfigurationPanel(QMainWindow):
     def showDialog(self):
         # apre una finestra di selezione in /home dove e' possibile selezionare solo file py
         fname = QFileDialog.getOpenFileName(self, 'Load file', '/home', "Python Files (*.py)")
-        print fname[0]
+        print(fname[0])
         f = open(fname[0], 'r')
         with f:
             data = f.read()
-            print data
+            print(data)
         f.close()
 
     def changeCheckBoxState(self, state):
@@ -173,7 +173,8 @@ class ConfigurationPanel(QMainWindow):
         Funzione che stampa a terminale tutte le volte che viene cliccata
         una checkbox
         '''
-        if state == Qt.Checked:
+        #if state == Qt.Checked:
+        if True:
             sender = self.sender()
             self.statusBar().showMessage(sender.text())
             currentIndex = self.tab_widget.currentIndex()
@@ -185,8 +186,21 @@ class ConfigurationPanel(QMainWindow):
             """
             idx = self.tablayout_list[currentIndex].indexOf(sender)
             location = self.tablayout_list[currentIndex].getItemPosition(idx)
-            print "Tab:", currentIndex, "Row", location[0], "Column", location[1], "Sender:", sender.text()
+            print("Tab:", currentIndex, "Row", location[0], "Column", location[1], "Sender:", sender.text(), "State:",state)
 
+            #trovo la banda
+            band = self.bands[currentIndex]
+            presetnumber = location[0]
+            if location[1] == 0:
+                ptype = "active"
+            else:
+                if location[1] > 1 and location[1] < 26:
+                    ptype = "radioA, relay" + str(location[1]-1)
+                else:
+                    ptype = "radioB, relay" + str(location[1]-26)#attenzione alla "label"
+
+            print ("Posizione decodificata: banda",band,", preset numero",presetnumber,", tipo",ptype)
+ 
 if __name__ == '__main__':
 
     # Every PyQt5 application must create an application object.
