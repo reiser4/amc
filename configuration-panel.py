@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, json
 from PyQt5.QtWidgets import (QWidget,QApplication, QDesktopWidget, QPushButton,
     QMessageBox, QMainWindow, QAction, qApp, QTextEdit, QLCDNumber, QSlider, QVBoxLayout,
     QGridLayout, QTabWidget, QFileDialog, QCheckBox, QLabel, QLineEdit, QAbstractButton)
@@ -55,8 +55,8 @@ class ConfigurationPanel(QMainWindow):
         self.openAction = QAction("&Load to file", self)
         self.openAction.setShortcut("Ctrl+L")
         self.openAction.setStatusTip("Load to file")
-        # collego l'azione openAction al mio evento che ho creato showDialog
-        self.openAction.triggered.connect(self.showDialog)
+        # collego l'azione openAction al mio evento che ho creato loadConfiguration
+        self.openAction.triggered.connect(self.loadConfiguration)
 
         # azione per salvare la configurazione su file
         self.saveAction = QAction("&Save on file", self)
@@ -178,16 +178,6 @@ class ConfigurationPanel(QMainWindow):
         sender = self.sender()
         self.statusBar().showMessage(sender.text() + ' was pressed')
 
-    def showDialog(self):
-        # apre una finestra di selezione in /home dove e' possibile selezionare solo file py
-        fname = QFileDialog.getOpenFileName(self, 'Load file', os.getcwd(), "Python Files (*.py)")
-        print(fname[0])
-        f = open(fname[0], 'r')
-        with f:
-            data = f.read()
-            print(data)
-        f.close()
-
     def changeCheckBoxState(self, state):
         '''
         Funzione che stampa a terminale tutte le volte che viene cliccata
@@ -237,21 +227,27 @@ class ConfigurationPanel(QMainWindow):
                 else:
                     # -25 perche' sarebbe -26 (numero oggetti) + 1 (perche' non voglio partire da 0 ma da 1)
                     ptype = "radioB, relay " + str(location[1]-25) # attenzione alla "label"
-
             print ("Posizione decodificata: banda ",band,", preset numero ",presetnumber,", tipo ",ptype)
 
     def saveConfiguration(self):
-
-        tmpwrite = '{"Configuration":{"Relay":'
+        tmpwrite = '{"relayconfig":{'
+        commaTab = False
         for indexTab in range(len(self.bands)):
-            firstWrite = True
+            firstRow = True
+            nRowChecked = 0
             for indexRow in range(self.nrow):
                 if self.checkbox_matrix[indexTab][indexRow].isChecked() == True:
-                    isChecked = True
-                    if firstWrite:
-                        tmpwrite += '{"' + self.bands[indexTab] + '":'
-                        firstWrite = False
-                    tmpwrite += '{"' + str(indexRow) + '":{"Label":' + '"' + self.labels_matrix[indexTab][indexRow].text() + '",'
+                    nRowChecked += 1
+                    if firstRow:
+                        if commaTab:
+                            tmpwrite += ','
+                            commaTab = False
+                        tmpwrite += '"' + self.bands[indexTab] + '":{'
+                        firstRow = False
+                        commaTab = True
+                    else:
+                        tmpwrite += ','
+                    tmpwrite += '"' + str(indexRow) + '":{"label":' + '"' + self.labels_matrix[indexTab][indexRow].text() + '",'
                     relayA = ""
                     relayB = ""
                     for z in range(self.nrele):
@@ -263,15 +259,28 @@ class ConfigurationPanel(QMainWindow):
                             relayB += "1"
                         else:
                             relayB += "0"
-                    tmpwrite += '"RelayA":' + '{"' + relayA + '"},"RelayB":' + '{"' + relayB + '"}}}'
-            if isChecked:
+                    tmpwrite += '"relayA":' + '"' + relayA + '","relayB":' + '"' + relayB + '"}'
+            if nRowChecked > 0:
+                # chiudo parentesi prima di label
                 tmpwrite += '}'
-                isChecked = False
-            firstWrite =True
+
         tmpwrite += '}}'
         AtomicWrite.writeFile("test-config.json", tmpwrite)
         print "Scrittura eseguita correttamente su file"
 
+    def loadConfiguration(self):
+        # apre una finestra di selezione in /home dove e' possibile selezionare solo file py
+        fname = QFileDialog.getOpenFileName(self, 'Load file', os.getcwd(), "JSON Files (*.json)")
+        print(fname[0])
+        f = open(fname[0], 'r')
+        with f:
+            data = f.read()
+            print(data[80:90])
+        f.close()
+
+        with open(fname[0], 'r') as f:
+            data = json.load(f)
+        print data
 
 
 if __name__ == '__main__':
