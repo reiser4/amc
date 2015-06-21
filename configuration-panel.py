@@ -33,6 +33,7 @@ class ConfigurationPanel(QMainWindow):
         self.initAction()
         # creo il menu'
         self.initMenuBar()
+        self.initToolBar()
         # creo le tab ed il loro contenuto
         self.initTab()
 
@@ -52,14 +53,14 @@ class ConfigurationPanel(QMainWindow):
         self.exitAction.triggered.connect(self.close)
 
         # azione per caricare la configurazione da file
-        self.openAction = QAction("&Load to file", self)
+        self.openAction = QAction(QIcon("icons/open-configuration.png"), "&Load to file", self)
         self.openAction.setShortcut("Ctrl+L")
         self.openAction.setStatusTip("Load to file")
         # collego l'azione openAction al mio evento che ho creato loadConfiguration
         self.openAction.triggered.connect(self.loadConfiguration)
 
         # azione per salvare la configurazione su file
-        self.saveAction = QAction("&Save on file", self)
+        self.saveAction = QAction(QIcon("icons/save-configuration.png"), "&Save on file", self)
         self.saveAction.setShortcut("Ctrl+S")
         self.saveAction.setStatusTip("Save to file")
         self.saveAction.triggered.connect(self.saveConfiguration)
@@ -92,8 +93,15 @@ class ConfigurationPanel(QMainWindow):
 
         configuration_menu = menubar.addMenu("&Configuration")
         configuration_menu.addAction(self.saveAction)
+        configuration_menu.addSeparator()
         configuration_menu.addAction(self.openAction)
         #connection_menu = menubar.addMenu("&Connection")
+
+    def initToolBar(self):
+        toolbar = self.addToolBar('ToolBar')
+        toolbar.addAction(self.saveAction)
+        toolbar.addSeparator()
+        toolbar.addAction(self.openAction)
 
     def initTab(self):
         # creo un TabWidget che sara' il widget padre
@@ -164,6 +172,9 @@ class ConfigurationPanel(QMainWindow):
         # muoviamo la finestra al centro dello schermo
         qr.moveCenter(cp)
         self.move(qr.topLeft())
+
+    def warningOpenFile(self):
+        QMessageBox.warning(self, 'Errore', "Errore nell'apertura del file")
 
     def closeEvent(self, event):
         reply = QMessageBox.question(self, 'Message', "Are you sure to quit?",
@@ -289,36 +300,34 @@ class ConfigurationPanel(QMainWindow):
         print "Scrittura eseguita correttamente su file"
 
     def loadConfiguration(self):
-        # apre una finestra di selezione in /home dove e' possibile selezionare solo file py
-        fname = QFileDialog.getOpenFileName(self, 'Load file', os.getcwd(), "JSON Files (*.json)")
-        print(fname[0])
-        with open(fname[0], 'r') as fin:
-            configuration = json.load(fin)
-        #print configuration
-        fin.close()
-        for indexTab in range(len(self.bands)):
-            for indexRow in range(self.nrow):
-                if self.checkbox_matrix[indexTab][indexRow].isChecked() == True:
-                    self.checkbox_matrix[indexTab][indexRow].setCheckState(Qt.Unchecked)
-        for tab in configuration['relayconfig']:
-            for row in configuration['relayconfig'][tab]:
-                #print tab + "-" + row
-                label = configuration['relayconfig'][tab][row]['label']
-                relayA = configuration['relayconfig'][tab][row]['relayA']
-                relayB = configuration['relayconfig'][tab][row]['relayB']
-                #print label + relayA + relayB
-                #self.checkbox_matrix[self.bands.index(tab)][int(row)].checkStateSet()
-                self.checkbox_matrix[self.bands.index(tab)][int(row)].setCheckState(Qt.Checked)
-                #self.labels_matrix[self.bands.index(tab)][int(row)].setEnabled(True)
-                self.labels_matrix[self.bands.index(tab)][int(row)].setText(label)
-                for i in range(self.nrele):
-                    # +1 perche' non e' compresa la riga delle etichette
-                    #self.radio1cb_matrix[self.bands.index(tab)][int(row)][i].setEnabled(True)
-                    if relayA[i] == '1':
-                        self.radio1cb_matrix[self.bands.index(tab)][int(row)][i].setCheckState(Qt.Checked)
-                    #self.radio2cb_matrix[self.bands.index(tab)][int(row)][i].setEnabled(True)
-                    if relayB[i] == '1':
-                        self.radio2cb_matrix[self.bands.index(tab)][int(row)][i].setCheckState(Qt.Checked)
+        try:
+            # apre una finestra di selezione in /home dove e' possibile selezionare solo file py
+            fname = QFileDialog.getOpenFileName(self, 'Load file', os.getcwd(), "JSON Files (*.json)")
+            print(fname[0])
+            with open(fname[0], 'r') as fin:
+                configuration = json.load(fin)
+            #print configuration
+            fin.close()
+            for indexTab in range(len(self.bands)):
+                for indexRow in range(self.nrow):
+                    if self.checkbox_matrix[indexTab][indexRow].isChecked() == True:
+                        self.checkbox_matrix[indexTab][indexRow].setCheckState(Qt.Unchecked)
+            for tab in configuration['relayconfig']:
+                for row in configuration['relayconfig'][tab]:
+                    #print tab + "-" + row
+                    label = configuration['relayconfig'][tab][row]['label']
+                    relayA = configuration['relayconfig'][tab][row]['relayA']
+                    relayB = configuration['relayconfig'][tab][row]['relayB']
+                    #print label + relayA + relayB
+                    self.checkbox_matrix[self.bands.index(tab)][int(row)].setCheckState(Qt.Checked)
+                    self.labels_matrix[self.bands.index(tab)][int(row)].setText(label)
+                    for i in range(self.nrele):
+                        if relayA[i] == '1':
+                            self.radio1cb_matrix[self.bands.index(tab)][int(row)][i].setCheckState(Qt.Checked)
+                        if relayB[i] == '1':
+                            self.radio2cb_matrix[self.bands.index(tab)][int(row)][i].setCheckState(Qt.Checked)
+        except:
+            QMessageBox.warning(self, 'Errore', "Errore nell'apertura del file")
 
 
 if __name__ == '__main__':
