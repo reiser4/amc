@@ -6,11 +6,6 @@ from PyQt5.QtGui import QIcon, QKeySequence
 from PyQt5.QtCore import QCoreApplication, Qt
 from atomicwrite import AtomicWrite
 
-'''
-Riga 0:     Active(0,0)  Label(0,1)   Radio1(0,2+25)  Radio2(0,27+25)
-Riga 1-16:
-'''
-
 # grid = [[" " for x in range(5)] for y in range(5)]
 class ConfigurationPanel(QMainWindow):
 
@@ -208,7 +203,8 @@ class ConfigurationPanel(QMainWindow):
             location = self.tablayout_list[indexTab].getItemPosition(indexPos)
             indexRow = location[0]
             indexColumn = location[1]
-            text = "Tab: " + self.bands[indexTab] + ", Row: " + str(indexColumn) + ", Column: " + str(indexRow) + ", State: " + str(state)
+            text = "Tab: " + self.bands[indexTab] + ", Row: " + str(indexColumn) + \
+                    ", Column: " + str(indexRow) + ", State: " + str(state)
             #print text
             self.statusBar().showMessage(text)
             if state == Qt.Checked:
@@ -246,7 +242,8 @@ class ConfigurationPanel(QMainWindow):
             '''
             print "indexTab: ", indexTab
             print "idx:", idx
-            text = "Tab: " + str(indexTab) + ", Row: " + str(indexColumn) + ", Column: " + str(indexRow) + ", State: " + str(state)
+            text = "Tab: " + str(indexTab) + ", Row: " + str(indexColumn) + \
+                    ", Column: " + str(indexRow) + ", State: " + str(state)
             print text
             self.statusBar().showMessage(text)
             '''
@@ -279,7 +276,8 @@ class ConfigurationPanel(QMainWindow):
                         commaTab = True
                     else:
                         tmpwrite += ',\n'
-                    tmpwrite += '\t\t"' + str(indexRow) + '":{\n\t\t\t"label":' + '"' + self.labels_matrix[indexTab][indexRow].text() + '",\n'
+                    tmpwrite += '\t\t"' + str(indexRow) + '":{\n\t\t\t"label":' + \
+                                '"' + self.labels_matrix[indexTab][indexRow].text() + '",\n'
                     relayA = ""
                     relayB = ""
                     for z in range(self.nrele):
@@ -291,43 +289,60 @@ class ConfigurationPanel(QMainWindow):
                             relayB += "1"
                         else:
                             relayB += "0"
-                    tmpwrite += '\t\t\t"relayA":' + '"' + relayA + '",\n\t\t\t"relayB":' + '"' + relayB + '"\n\t\t}'
+                    tmpwrite += '\t\t\t"relayA":' + '"' + relayA + '",\n\t\t\t"relayB":' + \
+                                '"' + relayB + '"\n\t\t}'
             if nRowChecked > 0:
                 # chiudo parentesi prima di label
                 tmpwrite += '\n\t}'
         tmpwrite += '\n}}'
-        AtomicWrite.writeFile("test-config.json", tmpwrite)
-        print "Scrittura eseguita correttamente su file"
+        """
+        prendo il primo elemento, cioe' 0 perche' getSaveFileName mi restituisce
+        una lista del tipo (u'/home/giulio/workspace/amc/test-config.json',
+        u'JSON Files (*.json)')
+        """
+        fname = QFileDialog.getSaveFileName(self, 'Save configuration',
+                os.getcwd(), "JSON Files (*.json)")[0]
+        if fname:
+            #print fname
+            AtomicWrite.writeFile(fname, tmpwrite)
+            #print "Scrittura eseguita correttamente su file"
 
     def loadConfiguration(self):
-        try:
-            # apre una finestra di selezione in /home dove e' possibile selezionare solo file py
-            fname = QFileDialog.getOpenFileName(self, 'Load file', os.getcwd(), "JSON Files (*.json)")
-            print(fname[0])
-            with open(fname[0], 'r') as fin:
-                configuration = json.load(fin)
-            #print configuration
-            fin.close()
-            for indexTab in range(len(self.bands)):
-                for indexRow in range(self.nrow):
-                    if self.checkbox_matrix[indexTab][indexRow].isChecked() == True:
-                        self.checkbox_matrix[indexTab][indexRow].setCheckState(Qt.Unchecked)
-            for tab in configuration['relayconfig']:
-                for row in configuration['relayconfig'][tab]:
-                    #print tab + "-" + row
-                    label = configuration['relayconfig'][tab][row]['label']
-                    relayA = configuration['relayconfig'][tab][row]['relayA']
-                    relayB = configuration['relayconfig'][tab][row]['relayB']
-                    #print label + relayA + relayB
-                    self.checkbox_matrix[self.bands.index(tab)][int(row)].setCheckState(Qt.Checked)
-                    self.labels_matrix[self.bands.index(tab)][int(row)].setText(label)
-                    for i in range(self.nrele):
-                        if relayA[i] == '1':
-                            self.radio1cb_matrix[self.bands.index(tab)][int(row)][i].setCheckState(Qt.Checked)
-                        if relayB[i] == '1':
-                            self.radio2cb_matrix[self.bands.index(tab)][int(row)][i].setCheckState(Qt.Checked)
-        except:
-            QMessageBox.warning(self, 'Errore', "Errore nell'apertura del file")
+        """
+        apre una finestra di selezione in /home dove e' possibile selezionare solo file json
+        prendo il primo elemento, cioe' 0 perche' getOpenFileName mi restituisce
+        una lista del tipo (u'/home/giulio/workspace/amc/test-config.json',
+        u'JSON Files (*.json)')
+        """
+        fname = QFileDialog.getOpenFileName(self, 'Load configuration',
+                os.getcwd(), "JSON Files (*.json)")[0]
+        if fname:
+            #print fname
+            try:
+                with open(fname, 'r') as fin:
+                    configuration = json.load(fin)
+                #print configuration
+                fin.close()
+                for indexTab in range(len(self.bands)):
+                    for indexRow in range(self.nrow):
+                        if self.checkbox_matrix[indexTab][indexRow].isChecked() == True:
+                            self.checkbox_matrix[indexTab][indexRow].setCheckState(Qt.Unchecked)
+                for tab in configuration['relayconfig']:
+                    for row in configuration['relayconfig'][tab]:
+                        #print tab + "-" + row
+                        label = configuration['relayconfig'][tab][row]['label']
+                        relayA = configuration['relayconfig'][tab][row]['relayA']
+                        relayB = configuration['relayconfig'][tab][row]['relayB']
+                        #print label + relayA + relayB
+                        self.checkbox_matrix[self.bands.index(tab)][int(row)].setCheckState(Qt.Checked)
+                        self.labels_matrix[self.bands.index(tab)][int(row)].setText(label)
+                        for i in range(self.nrele):
+                            if relayA[i] == '1':
+                                self.radio1cb_matrix[self.bands.index(tab)][int(row)][i].setCheckState(Qt.Checked)
+                            if relayB[i] == '1':
+                                self.radio2cb_matrix[self.bands.index(tab)][int(row)][i].setCheckState(Qt.Checked)
+            except Exception, e:
+                QMessageBox.warning(self, 'Errore', str(e))
 
 
 if __name__ == '__main__':
