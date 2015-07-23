@@ -3,7 +3,7 @@ import time
 import json
 
 #import Adafruit_BBIO.GPIO as GPIO
-
+from atomicwrite import AtomicWrite
 from bcdin import BcdIn
 from bcdout import BcdOut
 from icomin import IcomIn
@@ -25,6 +25,10 @@ preset = Preset()
 txing = ""
 clear = True
 lastband = "-1"
+
+
+def tx(R,S):
+	AtomicWrite.writeFile("/tmp/tx"+R+".txt",str(S))
 
 
 
@@ -49,15 +53,20 @@ while True:
 	presetA = preset.readPresetFile("/tmp/radioA.txt")
 	presetB = preset.readPresetFile("/tmp/radioB.txt")
 
-	#print "Preset A: " + presetA
-	#print "Preset B: " + presetB
+	print "Preset A: " + presetA
+	print "Preset B: " + presetB
 	
 	with open("test-config.json", 'r') as fin:
 		configuration = json.load(fin)
 	#print configuration
 
 	bandconfiguration = configuration['relayconfig'][str(myband)+'m']
-	#print bandconfiguration
+	print bandconfiguration
+
+
+        AtomicWrite.writeFile("/tmp/Apname.txt",preset.getPname(presetA,bandconfiguration,"A"))
+        AtomicWrite.writeFile("/tmp/Bpname.txt",preset.getPname(presetA,bandconfiguration,"B"))
+
 
 	#radioArx = "{0:b}".format(preset.readPresetFile("/tmp/radioArx.txt")).zfill(8)
 	#radioAtx = "{0:b}".format(preset.readPresetFile("/tmp/radioAtx.txt")).zfill(8)
@@ -142,6 +151,19 @@ while True:
 
 	else:
 		print "Logica non first-one-wins non implementata."
+
+
+	if clear:
+		tx("A",0)
+		tx("B",0)
+	else:
+		if txing == "A":
+			tx("A",1)
+			tx("B",0)
+		else:
+			tx("A",0)
+			tx("B",1)
+
 
 	print "Configurazione relay: " + relayconfig
 

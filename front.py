@@ -11,7 +11,9 @@ class Front:
 		print "Frontale inizializzato:", self.leds
 
 	def changeBand(self, band):
-
+		print "Cambiata banda:",band
+                AtomicWrite.writeFile("/tmp/band.txt", str(band))
+		
 		pin = -1
 		if (band == 6):
 			pin = 19
