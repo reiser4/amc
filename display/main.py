@@ -2,6 +2,7 @@
 from rg16080b import RG16080B
 from display import Display
 from gfx import Gfx
+from time import sleep
 
 def getFileContent(filename):
         txt = open(filename)
@@ -30,6 +31,8 @@ while True:
         	if data[i] == "1":
                 	display.setPixel(y,x,True)
 
-	rg16080b.writePixels(pixels)
+	rg16080b.writePixels(data)
 	display.writePng()
 	### attendo
+	
+	sleep(0.1)
