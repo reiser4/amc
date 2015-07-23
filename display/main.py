@@ -1,30 +1,35 @@
 
-
-#from Adafruit_I2C import Adafruit_I2C
-#i2c = Adafruit_I2C(0x20,1)
-#print i2c.readU8(0x09)
-
-#test mcp23017
-
-#from MCP23017 import MCP23017
-#mcp23017 = MCP23017(1)
-
-#mcp23017.writePin("A", 1, 1)
-#mcp23017.writePin("A", 2, 1)
-#mcp23017.writePin("A", 3, 1)
-#mcp23017.writePin("A", 4, 1)
-#mcp23017.writePin("A", 5, 1)
-#mcp23017.writePin("A", 6, 1)
-
 from rg16080b import RG16080B
+from display import Display
+from gfx import Gfx
 
-pixels = list()
-for i in range((180*80)/4):
-	pixels.append(1)
-	pixels.append(0)
-        pixels.append(0)
-        pixels.append(0)
-
+def getFileContent(filename):
+        txt = open(filename)
+        return txt.read()
 
 rg16080b = RG16080B()
-rg16080b.writePixels(pixels)
+display = Display("dummy")
+mygfx = Gfx()
+
+while True:
+
+	### ricavo i dati
+	band = getFileContent("/tmp/band.txt")
+	relay = getFileContent("/tmp/relay.txt")
+
+	### stampo a schermo
+	mygfx.writeText(20,0,"BANDA: " + band)
+	mygfx.writeText(5,30,"RELAY: " + relay)
+
+
+
+	data = mygfx.getData()
+	for i in range(0,160*80):
+	        y = i / 160
+        	x = i % 160
+        	if data[i] == "1":
+                	display.setPixel(y,x,True)
+
+	rg16080b.writePixels(pixels)
+	display.writePng()
+	### attendo
