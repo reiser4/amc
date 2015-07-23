@@ -1,22 +1,31 @@
 import time
 from display import Display
+from gfx import Gfx
 
+
+def getFileContent(filename):
+	txt = open(filename)
+	return txt.read()
+
+gfx = Gfx()
+display = Display("dummy")
 tstart = time.time()
 
-display = Display("dummy")
+mygfx = Gfx()
 
-for i in range(2000):
-    for y in range(80):
-        for x in range(0, 160, 2):
-            display.setPixel(y, x, True)
+band = getFileContent("/tmp/band.txt")
+mygfx.writeText(20,0,"BANDA: " + band)
+relay = getFileContent("/tmp/relay.txt")
+mygfx.writeText(5,30,"RELAY: " + relay)
 
-#display.writeChar(20,20,"Z")
-#display.writeWord(40,40,"ZZ ZZ")
-#display.writeLine(10, 10, 10, "o")
-#display.writeLine(10, 10, 10, "v")
-#display.writeLine(19, 10, 10, "o")
-#display.writeLine(10, 19, 10, "v")
-#display.writeRect(40, 40, 10, 10)
+data = mygfx.getData()
+print data
+for i in range(0,160*80):
+	y = i / 160
+	x = i % 160
+	if data[i] == "1":
+		display.setPixel(y,x,True)
+
 display.writePng()
 
 print "Tempo impiegato:", time.time() - tstart, "secondi"
