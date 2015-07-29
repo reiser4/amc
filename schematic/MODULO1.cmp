@@ -1,0 +1,45 @@
+Cmp-Mod V01 Created by CvPcb (2013-07-07 BZR 4022)-stable date = 22/07/2015 18:17:14
+
+BeginCmp
+TimeStamp = /55AE372A;
+Reference = D1;
+ValeurCmp = RG16080B-BIY-V_LOGIC_2;
+IdModule  = ZZPIN20;
+EndCmp
+
+BeginCmp
+TimeStamp = /55AE357F;
+Reference = J1;
+ValeurCmp = MCP23017_LOGIC_2;
+IdModule  = DIP-28__300;
+EndCmp
+
+BeginCmp
+TimeStamp = /55AE3739;
+Reference = P1;
+ValeurCmp = CONN_4;
+IdModule  = PIN_ARRAY_4x1;
+EndCmp
+
+BeginCmp
+TimeStamp = /55AE73A8;
+Reference = R1;
+ValeurCmp = 200;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /55AE4A50;
+Reference = RV1;
+ValeurCmp = POT;
+IdModule  = ZZTRIMMER;
+EndCmp
+
+BeginCmp
+TimeStamp = /55AE3B63;
+Reference = U1;
+ValeurCmp = L_CONVERTER;
+IdModule  = L_CONVERTER;
+EndCmp
+
+EndListe
