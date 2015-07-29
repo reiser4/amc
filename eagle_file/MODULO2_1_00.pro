@@ -2,14 +2,14 @@ EAGLE AutoRouter Statistics:
 
 Job           : C:/Users/Max/Documents/amc/eagle_file/MODULO2_1.brd
 
-Start at      : 19:32:57 (29/07/2015)
-End at        : 19:33:09 (29/07/2015)
+Start at      : 20:12:07 (29/07/2015)
+End at        : 20:18:28 (29/07/2015)
 Elapsed time  : 00:00:00
 
 Signals       :    55   RoutingGrid: 9 mil  Layers: 1
-Connections   :   104   predefined:  104 ( 0 Vias )
+Connections   :   109   predefined:  11 ( 0 Vias )
 
-Router memory :   463908
+Router memory :   453522
 
 Job has been interrupted!
 
@@ -22,6 +22,6 @@ max. Total        :         0
 
 Routed            :         0
 Vias              :         0
-Resolution        :   100.0 %
+Resolution        :    10.1 %
 
-Final             : 100.0% finished
+Final             : 
