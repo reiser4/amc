@@ -1,9 +1,8 @@
 import sys, os, json
-from PyQt5.QtWidgets import (QWidget,QApplication, QDesktopWidget, QPushButton,
-    QMessageBox, QMainWindow, QAction, qApp, QTextEdit, QLCDNumber, QSlider, QVBoxLayout,
-    QGridLayout, QTabWidget, QFileDialog, QCheckBox, QLabel, QLineEdit, QAbstractButton)
+from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QKeySequence
 from PyQt5.QtCore import QCoreApplication, Qt
+
 from atomicwrite import AtomicWrite
 
 # grid = [[" " for x in range(5)] for y in range(5)]
@@ -11,27 +10,27 @@ class ConfigurationPanel(QMainWindow):
 
     def __init__(self):
         super(ConfigurationPanel, self).__init__()
-        self.initUI()
-
-    def initUI(self):
+        # imposto la grandezza del font
+        self.setStyleSheet('font-size: 11pt;')
         self.bands = ["6m", "10m", "12m", "15m", "17m", "20m", "30m", "40m", "60m", "80m", "160m"]
         self.nrow = 16
         self.nrele = 24
+        # creo le azioni che usero' in seguito
+        self.initAction()
+        self.initUI()
+
+    def initUI(self):
         # imposto le dimensioni della finestra
         self.setGeometry(0, 0, 1500, 600)
         # imposto il titolo della finestra
         self.setWindowTitle("AMC Configuration Panel")
         # sposta la finestra al centro del desktop
         self.centerOnScreen()
-
-        # creo le azioni che usero' in seguito
-        self.initAction()
         # creo il menu'
         self.initMenuBar()
         self.initToolBar()
         # creo le tab ed il loro contenuto
         self.initTab()
-
         # imposta il widget dato come widget centrale della finestra principale
         self.setCentralWidget(self.tab_widget)
         # visualizzo il widget
@@ -134,6 +133,7 @@ class ConfigurationPanel(QMainWindow):
                 self.checkbox_matrix[i][y].setObjectName("checkboxRowTab" + str(i).zfill(2))
                 self.checkbox_matrix[i][y].setCheckState(Qt.Unchecked)
                 self.checkbox_matrix[i][y].stateChanged.connect(self.changeStateRow)
+                #self.checkbox_matrix[i][y].setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Expanding)
                 self.tablayout_list[i].addWidget(self.checkbox_matrix[i][y], y+1, 0)
                 self.labels_matrix[i].append(QLineEdit(tab_list[i]))
                 self.labels_matrix[i][y].setEnabled(False)
@@ -142,6 +142,7 @@ class ConfigurationPanel(QMainWindow):
                 self.radio2cb_matrix[i].append(list())
                 for z in range(self.nrele):
                     self.radio1cb_matrix[i][y].append(QCheckBox(tab_list[i]))
+                    #self.radio1cb_matrix[i][y][z].setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Expanding)
                     #self.radio1cb_matrix[i][y][z].stateChanged.connect(self.changeCheckBoxState)
                     self.radio1cb_matrix[i][y][z].setEnabled(False)
                     # aggiungo 1 a y perche' devo contare le etichette (Active, Label, Radio1, Radio2)
