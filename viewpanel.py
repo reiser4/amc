@@ -3,7 +3,7 @@ import serial.tools.list_ports
 from com_monitor import ComMonitorThread
 from livedatafeed import LiveDataFeed
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtCore import Qt, QTimer
 
 class ViewPanel(QMainWindow):
@@ -14,6 +14,10 @@ class ViewPanel(QMainWindow):
         # all'avvio del programma e' selezionata la radio A
         self.radio = "A"
         self.portname = ""
+
+        ### TEST
+        self.portname = "/dev/pts/26"
+
         self.nantenne = 8
         self.nrelay = 24
         # indica se sono in ascolto o no
@@ -21,7 +25,7 @@ class ViewPanel(QMainWindow):
         # variabile per il thread di ascolto
         self.com_monitor = None
         # indica l'ultimo aggiornamento della view
-        self.lastupdateview = None
+        self.lastupdatedata = None
         # varibile per avere i dati piu' recenti
         self.livefeed = LiveDataFeed()
         # code per i dati e per gli errori
@@ -29,28 +33,26 @@ class ViewPanel(QMainWindow):
         self.error_q = Queue.Queue()
         # conto alla rovescia
         self.timer = QTimer()
-        #self.setGeometry(0, 0, 600, 600)
         self.initAction()
-        # imposto il titolo della finestra
-        self.setWindowTitle("RadioA")
         # inizializzo la toolbar
         self.initToolBar()
+        self.radio_groupbox_defaultStyleSheet = None
+        #self.radioTX_groupbox_defaultStyleSheet = None
+        self.antenne_defaultStyleSheet = None
         # creo gli elementi della finistra
-        self.initUI()
-        # sposta la finestra al centro del desktop
-        self.centerOnScreen()
-        # visualizzo la scritta 'Ready' nella status bar
-        self.statusBar().showMessage("Ready")
-        # impongo che la finestra sia sempre in primo piano
-        self.setWindowFlags(Qt.WindowStaysOnTopHint)
+        self.initLayout()
+        self.initSettingsLayout()
         self.setActionsEnableState()
+
+        ### TEST
+        self.start_action.setEnabled(True)
 
     def initAction(self):
         # azione per uscire dall'applicazione
         self.exit_action = QAction(QIcon("icons/exit.png"), "&Exit", self)
         self.exit_action.setShortcut("Ctrl+Q")
         self.exit_action.setStatusTip("Exit application")
-        # collego l'azione exit_action all'evento self.close (gia' presente in PyQT)
+        # collego l'azione exit_action all'evento self.close (gia' presete in PyQT)
         self.exit_action.triggered.connect(self.close)
 
         self.start_action = QAction(QIcon("icons/start.png"), "&Start", self)
@@ -69,18 +71,37 @@ class ViewPanel(QMainWindow):
         toolbar.addSeparator()
         toolbar.addAction(self.stop_action)
 
-    def initUI(self):
+    def initSettingsLayout(self):
+         # imposto il titolo della finestra
+        self.setWindowTitle("RadioA")
+        #self.setGeometry(0, 0, 600, 600)
+        # sposta la finestra al centro del desktop
+        self.centerOnScreen()
+        # visualizzo la scritta 'Ready' nella status bar
+        self.statusBar().showMessage("Ready")
+        # impongo che la finestra sia sempre in primo piano
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)
+
+    def initLayout(self):
+        boldfont = QFont()
+        boldfont.setBold(True)
         settings_layout = QHBoxLayout()
         settings_layout.addStretch(2)
-        settings_layout.addWidget(QLabel('COM Port:'))
-        serials_c = QComboBox(self)
-        self.serials_list = list(serial.tools.list_ports.comports())
-        for ser in self.serials_list:
-            serials_c.addItem(ser[1])
-        serials_c.activated.connect(self.selectSerial)
-        settings_layout.addWidget(serials_c)
+        com_lbl = QLabel('COM Port:')
+        com_lbl.setFont(boldfont)
+        settings_layout.addWidget(com_lbl)
+        com_c = QComboBox(self)
+        self.com_list = list(serial.tools.list_ports.comports())
+        # imposto la porta selezionata con il primo elemento della lista
+        self.portname = self.com_list[0][0]
+        for ser in self.com_list:
+            com_c.addItem(ser[1])
+        com_c.activated.connect(self.selectCom)
+        settings_layout.addWidget(com_c)
         settings_layout.addStretch(1)
-        settings_layout.addWidget(QLabel('Radio:'))
+        radio_lbl = QLabel('Radio:')
+        radio_lbl.setFont(boldfont)
+        settings_layout.addWidget(radio_lbl)
         radioA = QRadioButton("A")
         radioA.setChecked(True)
         radioB = QRadioButton("B")
@@ -91,40 +112,53 @@ class ViewPanel(QMainWindow):
         settings_layout.addWidget(radioA)
         settings_layout.addWidget(radioB)
 
+        antenneRX_lbl = QLabel('Antenne:')
+        self.antenne_defaultStyleSheet = antenneRX_lbl.styleSheet()
+        antenneRX_lbl.setFont(boldfont)
+        presetRX_lbl = QLabel('preset:')
+        presetRX_lbl.setFont(boldfont)
         self.antenneRX_list = list()
         radioRX_layout = QGridLayout()
-        radioRX_layout.addWidget(QLabel("Antenne"), 0, 0)
-        radioRX_layout.addWidget(QLabel("Present"), 1, 0)
+        radioRX_layout.addWidget(antenneRX_lbl, 0, 0)
         for i in range(self.nantenne):
             self.antenneRX_list.append(QLabel(str(i+1)))
             radioRX_layout.addWidget(self.antenneRX_list[i], 0, i+1)
-        self.presentRX_label = QLabel()
-        #self.presentRX_label.setText("################")
-        radioRX_layout.addWidget(self.presentRX_label, 1, 1, 1, self.nantenne)
-        radioRX_groupbox = QGroupBox('RX')
-        radioRX_groupbox.setLayout(radioRX_layout)
-        #radioRX_groupbox.setStyleSheet("background-color: red;")
+        radioRX_layout.addWidget(presetRX_lbl, 1, 0)
+        self.presetRX_label = QLabel()
+        #self.presetRX_label.setText("################")
+        radioRX_layout.addWidget(self.presetRX_label, 1, 1, 1, self.nantenne)
+        self.radioRX_groupbox = QGroupBox('RX')
+        self.radioRX_groupbox.setLayout(radioRX_layout)
+        #self.radioRX_groupbox.setStyleSheet("background-color: white;")
+        self.radio_groupbox_defaultStyleSheet = self.radioRX_groupbox.styleSheet()
 
+        antenneTX_lbl = QLabel('Antenne:')
+        antenneTX_lbl.setFont(boldfont)
+        presetTX_lbl = QLabel('Preset:')
+        presetTX_lbl.setFont(boldfont)
         self.antenneTX_list = list()
         radioTX_layout = QGridLayout()
-        radioTX_layout.addWidget(QLabel("Antenne"), 0, 0)
-        radioTX_layout.addWidget(QLabel("Present"), 1, 0)
+        radioTX_layout.addWidget(antenneTX_lbl, 0, 0)
         for i in range(self.nantenne):
             # +9 perche' l'indice visualizzato parte 9 e non da 0
             self.antenneTX_list.append(QLabel(str(i+9)))
             radioTX_layout.addWidget(self.antenneTX_list[i], 0, i+1)
-        self.presentTX_label = QLabel()
-        radioTX_layout.addWidget(self.presentTX_label, 1, 1, 1, self.nantenne)
-        radioTX_groupbox = QGroupBox('TX')
-        radioTX_groupbox.setLayout(radioTX_layout)
-        #radioTX_groupbox.setStyleSheet("QGroupBox { border: black; }")
+        radioTX_layout.addWidget(presetTX_lbl, 1, 0)
+        self.presetTX_label = QLabel()
+        radioTX_layout.addWidget(self.presetTX_label, 1, 1, 1, self.nantenne)
+        self.radioTX_groupbox = QGroupBox('TX')
+        self.radioTX_groupbox.setLayout(radioTX_layout)
+        #self.radio_groupbox_defaultStyleSheet = self.radioTX_groupbox.styleSheet()
+        #self.radioTX_groupbox.setStyleSheet("QGroupBox { border: black; }")
 
         central_layout = QHBoxLayout()
-        central_layout.addWidget(radioRX_groupbox)
-        central_layout.addWidget(radioTX_groupbox)
+        central_layout.addWidget(self.radioRX_groupbox)
+        central_layout.addWidget(self.radioTX_groupbox)
 
         bottom_layout = QHBoxLayout()
-        bottom_layout.addWidget(QLabel('Relay:'))
+        relay_lbl = QLabel('Relay:')
+        relay_lbl.setFont(boldfont)
+        bottom_layout.addWidget(relay_lbl)
         self.relay_list = list()
         for i in range(self.nrelay):
             # +1 perche' l'indice visualizzato parte 1 e non da 0
@@ -157,11 +191,11 @@ class ViewPanel(QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-    def selectSerial(self, i):
-        #print self.serials_list[i]
-        self.portname = self.serials_list[i][0]
+    def selectCom(self, i):
+        #print self.com_list[i]
+        self.portname = self.com_list[i][0]
         #print self.portname
-        self.statusBar().showMessage("Selected COM: " + self.portname)
+        self.statusBar().showMessage("Selected COM port: " + self.portname)
         self.setActionsEnableState()
 
     def selectRadio(self, radioButton):
@@ -178,7 +212,7 @@ class ViewPanel(QMainWindow):
 
     def startListening(self):
         """
-            Start the listening: com_monitor thread and the update timer
+            Start the listening: ComMonitorThread thread and the update timer
         """
         if self.com_monitor is not None or self.portname == '':
             return
@@ -186,10 +220,10 @@ class ViewPanel(QMainWindow):
         ### Chiedere ad Enrico per il timeout
         ###
         self.com_monitor = ComMonitorThread(
-            self.data_q,
-            self.error_q,
-            self.portname,
-            5)
+            data_q=self.data_q,
+            error_q=self.error_q,
+            port_num=self.portname,
+            port_timeout=5)
         self.com_monitor.start()
         # prendo un elemento dalla coda, se non trovo niente rimango in
         # attesa per 0.1 secondi
@@ -197,12 +231,12 @@ class ViewPanel(QMainWindow):
         if com_error is not None:
             self.criticalMessage('ComMonitorThread error', com_error)
             self.com_monitor = None
-            self.warningMessage('Error', "L'ascolto verra' fermato \
-                perche' e' impossibile collegarsi alla porta: " +
-                self.portname)
+            self.warningMessage('Error', "L'ascolto verra' fermato" +
+                " perche' impossibile collegarsi alla porta: " + self.portname)
             self.statusBar().showMessage("Error")
         else:
-            print "Sono in startListening e sta per partire il monitoraggio"
+            #print "Sono in startListening e sta per partire il " +
+            #    "monitoraggio sulla porta: " + self.portname
             self.monitor_active = True
             self.setActionsEnableState()
 
@@ -212,14 +246,13 @@ class ViewPanel(QMainWindow):
             ###
             # tempo in millisecondi
             self.timer.start(2000)
-            self.lastupdateview = time.time()
             self.statusBar().showMessage("Start listening")
 
     def stopListening(self):
         """
             Stop listening
         """
-        print "Sono in stopListening"
+        #print "Sono in stopListening"
         if self.com_monitor is not None:
             self.com_monitor.join(0.01)
             self.com_monitor = None
@@ -234,7 +267,7 @@ class ViewPanel(QMainWindow):
             Executed periodically when the monitor update timer
             is fired.
         """
-        print "Sono in onTimer"
+        #print "Sono in onTimer"
         com_error = self.getQueueElementNoWait(self.error_q)
         if com_error is not None:
             self.criticalMessage('ComMonitorThread error', com_error)
@@ -242,12 +275,12 @@ class ViewPanel(QMainWindow):
                 self,
                 'Message',
                 "Vuoi fermare l'ascolto?",
-                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No | QMessageBox.Yes,
                 QMessageBox.Yes)
             if reply == QMessageBox.Yes:
                 self.stopListening()
         else:
-            self.readSerialData()
+            self.readComData()
             self.updateView()
 
     def updateView(self):
@@ -257,101 +290,86 @@ class ViewPanel(QMainWindow):
             data was received since the last update. If not,
             nothing is updated.
         """
-        timetolastupdate = time.time() - self.lastupdateview
-        if timetolastupdate < 10:
-            if self.livefeed.has_new_data:
-                data = self.livefeed.readData()
-                if self.radio == 'A':
-                    for i in range(self.nantenne):
-                        if data['apresent'][i] == '1':
-                            self.antenneRX_list[i].setStyleSheet("background-color: red;")
-                        if data['apresent'][i+8] == '1':
-                            self.antenneTX_list[i].setStyleSheet("background-color: red;")
-                    self.presentRX_label.setText(data['apnamerx'])
-                    self.presentTX_label.setText(data['apnametx'])
+        #print "Sono in updateView"
+        if self.livefeed.has_new_data:
+            #print "Sto per leggere i dati"
+            data = self.livefeed.readData()
+            if self.radio == 'A':
+                #print "Sono dentro radio A"
+                for i in range(self.nantenne):
+                    if data['apreset'][i] == '1':
+                        self.antenneRX_list[i].setStyleSheet("background-color: red;")
+                    else:
+                        self.antenneRX_list[i].setStyleSheet(self.antenne_defaultStyleSheet)
+                    if data['apreset'][i+8] == '1':
+                        self.antenneTX_list[i].setStyleSheet("background-color: red;")
+                    else:
+                        self.antenneTX_list[i].setStyleSheet(self.antenne_defaultStyleSheet)
+                self.presetRX_label.setText(data['apnamerx'])
+                self.presetTX_label.setText(data['apnametx'])
+                if data['atx'] == '0':
+                    self.radioRX_groupbox.setStyleSheet("QGroupBox { background-color: yellow; }")
+                    self.radioTX_groupbox.setStyleSheet(self.radio_groupbox_defaultStyleSheet)
                 else:
-                    for i in range(self.nantenne):
-                        if data['bpresent'][i] == '1':
-                            self.antenneRX_list[i].setStyleSheet("background-color: red;")
-                        if data['bpresent'][i+8] == '1':
-                            self.antenneTX_list[i].setStyleSheet("background-color: red;")
-                    self.presentRX_label.setText(data['bpnamerx'])
-                    self.presentTX_label.setText(data['bpnametx'])
-                for i in range(self.nrelay):
-                    if data['relay'][i] == '1':
-                        self.relay_list[i].setStyleSheet("background-color: red;")
-            self.lastupdateview = time.time()
+                    self.radioRX_groupbox.setStyleSheet(self.radio_groupbox_defaultStyleSheet)
+                    self.radioTX_groupbox.setStyleSheet("QGroupBox { background-color: yellow; }")
+            else:
+                #print "Sono dentro radio B"
+                for i in range(self.nantenne):
+                    if data['bpreset'][i] == '1':
+                        self.antenneRX_list[i].setStyleSheet("background-color: red;")
+                    else:
+                        self.antenneRX_list[i].setStyleSheet(self.antenne_defaultStyleSheet)
+                    if data['bpreset'][i+8] == '1':
+                        self.antenneRX_list[i].setStyleSheet("background-color: red;")
+                    else:
+                        self.antenneTX_list[i].setStyleSheet(self.antenne_defaultStyleSheet)
+                self.presetRX_label.setText(data['bpnamerx'])
+                self.presetTX_label.setText(data['bpnametx'])
+                if data['btx'] == '0':
+                    self.radioRX_groupbox.setStyleSheet("QGroupBox { background-color: yellow; }")
+                    self.radioTX_groupbox.setStyleSheet(self.radio_groupbox_defaultStyleSheet)
+                else:
+                    self.radioRX_groupbox.setStyleSheet(self.radio_groupbox_defaultStyleSheet)
+                    self.radioTX_groupbox.setStyleSheet("QGroupBox { background-color: yellow; }")
+            for i in range(self.nrelay):
+                if data['relay'][i] == '1':
+                    self.relay_list[i].setStyleSheet("background-color: red;")
+                else:
+                    self.relay_list[i].setStyleSheet(self.antenne_defaultStyleSheet)
+            self.lastupdatedata = time.time()
+        if self.lastupdatedata:
+            timetolastupdate = time.time() - self.livefeed.readTimestamp()
+            self.statusBar().showMessage("Dati ricevuti " + str(int(timetolastupdate)) + " secondi fa")
         else:
-            reply = QMessageBox.question(
-                self,
-                'Message',
-                "I dati non sono aggiornati da piu' di 10 secondi,\
-                vuoi fermare l'ascolto?",
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.Yes)
-            if reply == QMessageBox.Yes:
-                self.stopListening()
+            self.statusBar().showMessage("Non ci sono dati da leggere")
+        """
+        reply = QMessageBox.question(
+            self,
+            'Message',
+            "I dati non sono aggiornati da piu' di 10 secondi,\
+            vuoi fermare l'ascolto?",
+            QMessageBox.No | QMessageBox.Yes,
+            QMessageBox.Yes)
+        if reply == QMessageBox.Yes:
+            self.stopListening()
+        """
 
-    def readSerialData(self):
+    def readComData(self):
         """
             Called periodically by the update timer to read data
-            from the serial port.
+            from the COM port.
         """
+        #print "Sono in readComData"
+        #listdata = self.getQueueElementWait(self.data_q, True, 0.1)
         listdata = self.getQueueElementNoWait(self.data_q)
+        #print "listdata", listdata
         if listdata is None:
-            self.statusBar().showMessage("Non ci sono dati da leggere")
+            #print "Esco da readComData"
             return
-        serialdata = listdata[0]
-        timestamp = listdata[1]
-        if len(serialdata) > 0:
-            n_apresent_active = 0
-            n_bpresent_active = 0
-            list_element = serialdata.split(';')
-            try:
-                apresent = list_element[0]
-                apnametx = list_element[1]
-                apnamerx = list_element[2]
-                relay = list_element[3]
-                bpresent = list_element[4]
-                bpnametx = list_element[5]
-                bpnamerx = list_element[6]
-                # controllo se i dati ricevuti sono corretti
-                for a, b in zip(apresent, bpresent):
-                    if a != '0' or a != '1':
-                        return
-                    if b != '0' or b != '1':
-                        return
-                    if a == '1':
-                        n_apresent_active +=1
-                    if b == '1':
-                        n_bpresent_active +=1
-            except Exception, e:
-                print str(e)
-            if len(apresent) != len(bpresent):
-                return
-            if len(apresent) != self.npresent:
-                return
-            n_apname = len(apnametx.split(',')) + len(apnamerx.split(','))
-            if n_apname != n_apresent_active:
-                return
-            n_bpname = len(bpnametx.split(',')) + len(bpnamerx.split(','))
-            if n_bpname != n_bpresent_active:
-                return
-            for r in relay:
-                if r != '0' or r != '1':
-                    return
-            if len(relay) != self.nrelay:
-                return
-            # se arrivo qua significa che i dati sono corretti
-            data = dict(apresent = apresent,
-                        apnametx = apnametx,
-                        apnamerx = apnamerx,
-                        relay = relay,
-                        bpresent = bpresent,
-                        bpnametx = bpnametx,
-                        bpnamerx = bpnamerx,
-                        timestamp = timestamp)
-            self.livefeed.addData(data)
+        #print "Dati che saranno inseriti: ", listdata[0]
+        #print "Timestamp: " + str(listdata[1])
+        self.livefeed.addData(listdata[0], listdata[1])
 
     def setActionsEnableState(self):
         if self.portname == '':
@@ -383,8 +401,7 @@ class ViewPanel(QMainWindow):
 
     def closeEvent(self, event):
         reply = QMessageBox.question(
-            self,
-            'Message',
+            self, 'Message',
             "Are you sure to quit?",
             QMessageBox.Yes | QMessageBox.No,
             QMessageBox.No)

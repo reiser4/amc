@@ -20,15 +20,20 @@ class LiveDataFeed(object):
     """
     def __init__(self):
         self.cur_data = None
+        self.cur_timestamp = None
         self.has_new_data = False
 
-    def addData(self, data):
+    def addData(self, data, timestamp):
         self.cur_data = data
+        self.cur_timestamp = timestamp
         self.has_new_data = True
 
     def readData(self):
         self.has_new_data = False
         return self.cur_data
+
+    def readTimestamp(self):
+        return self.cur_timestamp
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 import sys, os, json
+import serial.tools.list_ports
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon, QKeySequence
+from PyQt5.QtGui import QIcon, QKeySequence, QFont
 from PyQt5.QtCore import QCoreApplication, Qt
 
 from atomicwrite import AtomicWrite
@@ -10,8 +11,6 @@ class ConfigurationPanel(QMainWindow):
 
     def __init__(self):
         super(ConfigurationPanel, self).__init__()
-        # imposto la grandezza del font
-        self.setStyleSheet('font-size: 11pt;')
         self.bands = ["6m", "10m", "12m", "15m", "17m", "20m", "30m", "40m", "60m", "80m", "160m"]
         self.nrow = 16
         self.nrele = 24
@@ -20,12 +19,12 @@ class ConfigurationPanel(QMainWindow):
         self.initUI()
 
     def initUI(self):
+        # imposto la grandezza del font
+        self.setStyleSheet('font-size: 11pt;')
         # imposto le dimensioni della finestra
         self.setGeometry(0, 0, 1500, 600)
         # imposto il titolo della finestra
         self.setWindowTitle("AMC Configuration Panel")
-        # sposta la finestra al centro del desktop
-        self.centerOnScreen()
         # creo il menu'
         self.initMenuBar()
         self.initToolBar()
@@ -33,6 +32,8 @@ class ConfigurationPanel(QMainWindow):
         self.initTab()
         # imposta il widget dato come widget centrale della finestra principale
         self.setCentralWidget(self.tab_widget)
+        # sposta la finestra al centro del desktop
+        self.centerOnScreen()
         # visualizzo il widget
         self.show()
         # visualizzo la scritta 'Ready' nella status bar
@@ -47,17 +48,41 @@ class ConfigurationPanel(QMainWindow):
         self.exitAction.triggered.connect(self.close)
 
         # azione per caricare la configurazione da file
-        self.openAction = QAction(QIcon("icons/open-configuration.png"), "&Load to file", self)
+        self.openAction = QAction(
+            QIcon("icons/open-configuration.png"),
+            "&Load configuration",
+            self)
         self.openAction.setShortcut("Ctrl+L")
         self.openAction.setStatusTip("Load to file")
         # collego l'azione openAction al mio evento che ho creato loadConfiguration
         self.openAction.triggered.connect(self.loadConfiguration)
 
         # azione per salvare la configurazione su file
-        self.saveAction = QAction(QIcon("icons/save-configuration.png"), "&Save on file", self)
+        self.saveAction = QAction(
+            QIcon("icons/save-configuration.png"),
+            "&Save configuration",
+            self)
         self.saveAction.setShortcut("Ctrl+S")
         self.saveAction.setStatusTip("Save to file")
         self.saveAction.triggered.connect(self.saveConfiguration)
+
+        # azione per spedire la configurazione al beaglebone
+        self.sendAction = QAction(
+            QIcon("icons/send-configuration.png"),
+            "&Send configuration",
+            self)
+        self.sendAction.setShortcut("Ctrl+B")
+        self.sendAction.setStatusTip("Send to beaglebone")
+        self.sendAction.triggered.connect(self.sendConfiguration)
+
+        # azione per spedire la configurazione al beaglebone
+        self.sendAction2 = QAction(
+            QIcon("icons/send-configuration2.png"),
+            "&Send configuration",
+            self)
+        self.sendAction2.setShortcut("Ctrl+B")
+        self.sendAction2.setStatusTip("Send to beaglebone")
+        self.sendAction2.triggered.connect(self.sendConfiguration)
 
         """
         serialAction = QAction("&Serial", self)
@@ -81,14 +106,18 @@ class ConfigurationPanel(QMainWindow):
         # creo il menu ed aggiungo i vari campi
         menubar = self.menuBar()
         filemenu = menubar.addMenu("&File")
-        #filemenu.addSeparator()
+        filemenu.addAction(self.openAction)
+        filemenu.addAction(self.saveAction)
+        filemenu.addSeparator()
+        filemenu.addAction(self.sendAction)
+        filemenu.addSeparator()
         # aggancio al menu il comando per uscire
         filemenu.addAction(self.exitAction)
 
-        configuration_menu = menubar.addMenu("&Configuration")
-        configuration_menu.addAction(self.saveAction)
-        configuration_menu.addSeparator()
-        configuration_menu.addAction(self.openAction)
+        #configuration_menu = menubar.addMenu("&Configuration")
+        #configuration_menu.addAction(self.saveAction)
+        #configuration_menu.addSeparator()
+        #configuration_menu.addAction(self.openAction)
         #connection_menu = menubar.addMenu("&Connection")
 
     def initToolBar(self):
@@ -96,6 +125,7 @@ class ConfigurationPanel(QMainWindow):
         toolbar.addAction(self.saveAction)
         toolbar.addSeparator()
         toolbar.addAction(self.openAction)
+        toolbar.addAction(self.sendAction2)
 
     def initTab(self):
         # creo un TabWidget che sara' il widget padre
@@ -119,10 +149,23 @@ class ConfigurationPanel(QMainWindow):
             self.tablayout_list[i].setObjectName("tab" + str(i).zfill(2))
             #print self.tablayout_list[i].objectName()
             # nella i-esima tab creo un layout a griglia e posiziono i vari elementi
-            self.tablayout_list[i].addWidget(QLabel("Active", tab_list[i]), 0, 0)
-            self.tablayout_list[i].addWidget(QLabel("Label", tab_list[i]), 0, 1)
-            self.tablayout_list[i].addWidget(QLabel("Radio 1", tab_list[i]), 0, 2, 1, self.nrele)
-            self.tablayout_list[i].addWidget(QLabel("Radio 2", tab_list[i]), 0, 26, 1, self.nrele)
+            boldfont = QFont()
+            boldfont.setBold(True)
+            active_lbl = QLabel('Active:', tab_list[i])
+            active_lbl.setFont(boldfont)
+            label_lbl = QLabel('Label:', tab_list[i])
+            label_lbl.setFont(boldfont)
+            radio1_lbl = QLabel('Radio 1:', tab_list[i])
+            radio1_lbl.setFont(boldfont)
+            radio2_lbl = QLabel('Radio 2:', tab_list[i])
+            radio2_lbl.setFont(boldfont)
+            self.tablayout_list[i].addWidget(active_lbl, 0, 0)
+            #self.tablayout_list[i].addWidget(QLabel("Label", tab_list[i]), 0, 1)
+            self.tablayout_list[i].addWidget(label_lbl, 0, 1)
+            #self.tablayout_list[i].addWidget(QLabel("Radio 1", tab_list[i]), 0, 2, 1, self.nrele)
+            self.tablayout_list[i].addWidget(radio1_lbl, 0, 2, 1, self.nrele)
+            #self.tablayout_list[i].addWidget(QLabel("Radio 2", tab_list[i]), 0, 26, 1, self.nrele)
+            self.tablayout_list[i].addWidget(radio2_lbl, 0, 26, 1, self.nrele)
             self.checkbox_matrix.append(list())
             self.labels_matrix.append(list())
             self.radio1cb_matrix.append(list())
@@ -155,7 +198,6 @@ class ConfigurationPanel(QMainWindow):
                     # aggiungo 1 a y perche' devo contare le etichette (Active, Label, Radio1, Radio2)
                     # aggiungo 2 a z perche' devo tenere conto dei widget di sinistra (checkbox, label e 24 checkbox)
                     self.tablayout_list[i].addWidget(self.radio2cb_matrix[i][y][z], y+1, z+26)
-
 
     def centerOnScreen(self):
         '''
@@ -344,6 +386,107 @@ class ConfigurationPanel(QMainWindow):
                                 self.radio2cb_matrix[self.bands.index(tab)][int(row)][i].setCheckState(Qt.Checked)
             except Exception, e:
                 QMessageBox.warning(self, 'Errore', str(e))
+
+    def sendConfiguration(self):
+        sendConfiguration_panel = SendConfigurationPanel()
+        #sendConfiguration_panel.show()
+        sendConfiguration_panel.exec_()
+
+
+class SendConfigurationPanel(QDialog):
+    """docstring for SendConfigurationPanel"""
+    def __init__(self):
+        super(SendConfigurationPanel, self).__init__()
+        self.portname = ''
+        self.initLayout()
+        self.initSettingsLayout()
+
+    def initSettingsLayout(self):
+        # imposto la grandezza del font
+        self.setStyleSheet('font-size: 11pt;')
+         # imposto il titolo della finestra
+        self.setWindowTitle("Send configuration to beaglebone")
+        # imposto le dimensioni della finestra
+        self.setGeometry(0, 0, 300, 200)
+        # sposta la finestra al centro del desktop
+        self.centerOnScreen()
+
+    def initLayout(self):
+        boldfont = QFont()
+        boldfont.setBold(True)
+        serial_layout = QHBoxLayout()
+        serial_lbl = QLabel('Serial Port:')
+        serial_lbl.setFont(boldfont)
+        serial_layout.addWidget(serial_lbl)
+        serials_c = QComboBox(self)
+        self.serials_list = list(serial.tools.list_ports.comports())
+        # imposto la porta selezionata con il primo elemento della lista
+        self.portname = self.serials_list[0][0]
+        for ser in self.serials_list:
+            serials_c.addItem(ser[1])
+        serials_c.activated.connect(self.selectSerial)
+        serial_layout.addWidget(serials_c)
+        serial_layout.addStretch(1)
+
+        selectfile_layout = QHBoxLayout()
+        selectfile_btn = QPushButton('Select file')
+        selectfile_btn.clicked.connect(self.selectFile)
+        selectfile_layout.addWidget(selectfile_btn)
+        self.selectfile_lbl = QLabel('')
+        selectfile_layout.addWidget(self.selectfile_lbl)
+
+        bottom_layout =  QHBoxLayout()
+        send_btn = QPushButton('Send')
+        close_btn = QPushButton('Close')
+        close_btn.clicked.connect(self.close)
+        bottom_layout.addWidget(send_btn)
+        bottom_layout.addStretch(1)
+        bottom_layout.addWidget(close_btn)
+
+        main_layout = QVBoxLayout()
+        main_layout.addLayout(serial_layout)
+        main_layout.addLayout(selectfile_layout)
+        #main_layout.addWidget(horizontalLine)
+        main_layout.addStretch(1)
+        main_layout.addLayout(bottom_layout)
+
+        self.setLayout(main_layout)
+
+    def selectFile(self):
+        """
+        apre una finestra di selezione in /home dove e' possibile selezionare solo file json
+        prendo il primo elemento, cioe' 0 perche' getOpenFileName mi restituisce
+        una lista del tipo (u'/home/giulio/workspace/amc/test-config.json',
+        u'JSON Files (*.json)')
+        """
+        fname = QFileDialog.getOpenFileName(self, 'Select configuration',
+                os.getcwd(), "JSON Files (*.json)")[0]
+        if fname:
+            #print fname
+            try:
+                self.selectfile_lbl.setText(fname)
+                with open(fname, 'r') as fin:
+                    configuration = json.load(fin)
+                #print configuration
+                fin.close()
+
+            except Exception, e:
+                QMessageBox.warning(self, 'Errore', str(e))
+
+    def centerOnScreen(self):
+        '''
+        Centers the window on the screen.
+        '''
+        # prende le dimensioni della finestra
+        qr = self.frameGeometry()
+        # prende il punto centrale del display date le sue dimensioni
+        cp = QDesktopWidget().availableGeometry().center()
+        # muoviamo la finestra al centro dello schermo
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+
+    def selectSerial(self, i):
+        self.portname = self.serials_list[i][0]
 
 
 if __name__ == '__main__':
