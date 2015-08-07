@@ -50,9 +50,6 @@ class ComMonitorThread(threading.Thread):
                                 parity=port_parity,
                                 timeout=port_timeout)
 
-        ### TEST
-        self.serial_arg = dict(port='/dev/pts/27', timeout=5)
-
         self.data_q = data_q
         self.error_q = error_q
 

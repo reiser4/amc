@@ -5,10 +5,11 @@ from PyQt5.QtGui import QIcon, QKeySequence, QFont
 from PyQt5.QtCore import QCoreApplication, Qt
 
 from atomicwrite import AtomicWrite
+from com_write import ComWrite
 
 # grid = [[" " for x in range(5)] for y in range(5)]
 class ConfigurationPanel(QMainWindow):
-
+    """docstring for ConfigurationPanel"""
     def __init__(self):
         super(ConfigurationPanel, self).__init__()
         self.bands = ["6m", "10m", "12m", "15m", "17m", "20m", "30m", "40m", "60m", "80m", "160m"]
@@ -67,22 +68,22 @@ class ConfigurationPanel(QMainWindow):
         self.saveAction.triggered.connect(self.saveConfiguration)
 
         # azione per spedire la configurazione al beaglebone
-        self.sendAction = QAction(
-            QIcon("icons/send-configuration.png"),
-            "&Send configuration",
+        self.uploadAction = QAction(
+            QIcon("icons/upload-configuration.png"),
+            "&Upload configuration",
             self)
-        self.sendAction.setShortcut("Ctrl+B")
-        self.sendAction.setStatusTip("Send to beaglebone")
-        self.sendAction.triggered.connect(self.sendConfiguration)
+        self.uploadAction.setShortcut("Ctrl+B")
+        self.uploadAction.setStatusTip("Upload to beaglebone")
+        self.uploadAction.triggered.connect(self.uploadConfiguration)
 
         # azione per spedire la configurazione al beaglebone
-        self.sendAction2 = QAction(
-            QIcon("icons/send-configuration2.png"),
-            "&Send configuration",
+        self.uploadAction2 = QAction(
+            QIcon("icons/upload-configuration2.png"),
+            "&Upload configuration",
             self)
-        self.sendAction2.setShortcut("Ctrl+B")
-        self.sendAction2.setStatusTip("Send to beaglebone")
-        self.sendAction2.triggered.connect(self.sendConfiguration)
+        self.uploadAction2.setShortcut("Ctrl+B")
+        self.uploadAction2.setStatusTip("Upload to beaglebone")
+        self.uploadAction2.triggered.connect(self.uploadConfiguration)
 
         """
         serialAction = QAction("&Serial", self)
@@ -109,7 +110,7 @@ class ConfigurationPanel(QMainWindow):
         filemenu.addAction(self.openAction)
         filemenu.addAction(self.saveAction)
         filemenu.addSeparator()
-        filemenu.addAction(self.sendAction)
+        filemenu.addAction(self.uploadAction)
         filemenu.addSeparator()
         # aggancio al menu il comando per uscire
         filemenu.addAction(self.exitAction)
@@ -125,7 +126,7 @@ class ConfigurationPanel(QMainWindow):
         toolbar.addAction(self.saveAction)
         toolbar.addSeparator()
         toolbar.addAction(self.openAction)
-        toolbar.addAction(self.sendAction2)
+        toolbar.addAction(self.uploadAction2)
 
     def initTab(self):
         # creo un TabWidget che sara' il widget padre
@@ -225,10 +226,6 @@ class ConfigurationPanel(QMainWindow):
     def keyPressEvent(self, e):
         if e.key() == Qt.Key_Escape:
             self.close()
-
-    def buttonClicked(self):
-        sender = self.sender()
-        self.statusBar().showMessage(sender.text() + ' was pressed')
 
     def changeStateRow(self, state):
         if state == Qt.Checked or state == Qt.Unchecked:
@@ -387,27 +384,29 @@ class ConfigurationPanel(QMainWindow):
             except Exception, e:
                 QMessageBox.warning(self, 'Errore', str(e))
 
-    def sendConfiguration(self):
-        sendConfiguration_panel = SendConfigurationPanel()
-        #sendConfiguration_panel.show()
-        sendConfiguration_panel.exec_()
+    def uploadConfiguration(self):
+        uploadConfiguration_panel = UploadConfigurationPanel()
+        #uploadConfiguration_panel.show()
+        uploadConfiguration_panel.exec_()
 
 
-class SendConfigurationPanel(QDialog):
-    """docstring for SendConfigurationPanel"""
+class UploadConfigurationPanel(QDialog):
+    """docstring for UploadConfigurationPanel"""
     def __init__(self):
-        super(SendConfigurationPanel, self).__init__()
-        self.portname = ''
+        super(UploadConfigurationPanel, self).__init__()
+        self.portnum = ''
+        self.configuration = ''
         self.initLayout()
         self.initSettingsLayout()
 
     def initSettingsLayout(self):
         # imposto la grandezza del font
         self.setStyleSheet('font-size: 11pt;')
+        self.setWindowIcon(QIcon("icons/upload-configuration2.png"))
          # imposto il titolo della finestra
-        self.setWindowTitle("Send configuration to beaglebone")
+        self.setWindowTitle("Upload configuration to beaglebone")
         # imposto le dimensioni della finestra
-        self.setGeometry(0, 0, 300, 200)
+        self.setGeometry(0, 0, 350, 200)
         # sposta la finestra al centro del desktop
         self.centerOnScreen()
 
@@ -415,13 +414,13 @@ class SendConfigurationPanel(QDialog):
         boldfont = QFont()
         boldfont.setBold(True)
         serial_layout = QHBoxLayout()
-        serial_lbl = QLabel('Serial Port:')
+        serial_lbl = QLabel('COM Port:')
         serial_lbl.setFont(boldfont)
         serial_layout.addWidget(serial_lbl)
         serials_c = QComboBox(self)
         self.serials_list = list(serial.tools.list_ports.comports())
         # imposto la porta selezionata con il primo elemento della lista
-        self.portname = self.serials_list[0][0]
+        self.portnum = self.serials_list[0][0]
         for ser in self.serials_list:
             serials_c.addItem(ser[1])
         serials_c.activated.connect(self.selectSerial)
@@ -432,21 +431,32 @@ class SendConfigurationPanel(QDialog):
         selectfile_btn = QPushButton('Select file')
         selectfile_btn.clicked.connect(self.selectFile)
         selectfile_layout.addWidget(selectfile_btn)
-        self.selectfile_lbl = QLabel('')
+        file_lbl = QLabel('File:')
+        file_lbl.setFont(boldfont)
+        selectfile_layout.addWidget(file_lbl)
+        self.selectfile_lbl = QLabel('Nessun file selezionato')
         selectfile_layout.addWidget(self.selectfile_lbl)
+        selectfile_layout.addStretch(1)
 
         bottom_layout =  QHBoxLayout()
-        send_btn = QPushButton('Send')
+        self.upload_btn = QPushButton('Upload')
+        self.upload_btn.clicked.connect(self.uploadFile)
+        self.upload_btn.setEnabled(False)
         close_btn = QPushButton('Close')
         close_btn.clicked.connect(self.close)
-        bottom_layout.addWidget(send_btn)
+        bottom_layout.addWidget(self.upload_btn)
         bottom_layout.addStretch(1)
         bottom_layout.addWidget(close_btn)
+
+        self.progressBar = QProgressBar(self)
+        self.progressBar.setRange(0,100)
 
         main_layout = QVBoxLayout()
         main_layout.addLayout(serial_layout)
         main_layout.addLayout(selectfile_layout)
         #main_layout.addWidget(horizontalLine)
+        main_layout.addStretch(1)
+        main_layout.addWidget(self.progressBar)
         main_layout.addStretch(1)
         main_layout.addLayout(bottom_layout)
 
@@ -460,23 +470,46 @@ class SendConfigurationPanel(QDialog):
         u'JSON Files (*.json)')
         """
         fname = QFileDialog.getOpenFileName(self, 'Select configuration',
-                os.getcwd(), "JSON Files (*.json)")[0]
+                    os.getcwd(), "JSON Files (*.json)")[0]
         if fname:
             #print fname
             try:
-                self.selectfile_lbl.setText(fname)
+                name = fname.split('/')[-1]
+                self.selectfile_lbl.setText(name)
                 with open(fname, 'r') as fin:
-                    configuration = json.load(fin)
-                #print configuration
+                    self.configuration = json.dumps(json.load(fin))
+                #print json.dumps(self.configuration)
                 fin.close()
-
+                if self.portnum:
+                    # Abilito il pulsante per mandare il file
+                    self.upload_btn.setEnabled(True)
             except Exception, e:
                 QMessageBox.warning(self, 'Errore', str(e))
 
+    def uploadFile(self):
+        #print "Sono dentro uploadFile"
+        if self.configuration and self.portnum:
+            try:
+                #print "Sono dentro uploadFile e mi sto per collegare"
+                comwrite = ComWrite(self.portnum)
+
+                ### TEST
+                #comwrite = ComWrite("/dev/pts/27")
+
+                comwrite.connect()
+                comwrite.write(self.configuration)
+                self.progressBar.setValue(100)
+                comwrite.close()
+                self.informationMessage('Uploaded', 'File uploaded successfully')
+            except Exception, e:
+                self.criticalMessage('Errore', e.message)
+        else:
+            self.warningMessage('Error', 'Selezionare una porta ed un file')
+
     def centerOnScreen(self):
-        '''
-        Centers the window on the screen.
-        '''
+        """
+            Centers the window on the screen.
+        """
         # prende le dimensioni della finestra
         qr = self.frameGeometry()
         # prende il punto centrale del display date le sue dimensioni
@@ -486,13 +519,22 @@ class SendConfigurationPanel(QDialog):
         self.move(qr.topLeft())
 
     def selectSerial(self, i):
-        self.portname = self.serials_list[i][0]
+        self.portnum = self.serials_list[i][0]
+
+    def informationMessage(self, title, message):
+        QMessageBox.information(self, title, message)
+
+    def warningMessage(self, title, message):
+        QMessageBox.warning(self, title, message)
+
+    def criticalMessage(self, title, message):
+        QMessageBox.critical(self, title, message)
 
 
 if __name__ == '__main__':
     # Every PyQt5 application must create an application object.
     app = QApplication(sys.argv)
     configuration_panel = ConfigurationPanel()
-    configuration_panel.show()
+    #configuration_panel.show()
     # l'applicazione rimane in loop
     sys.exit(app.exec_())

@@ -13,11 +13,7 @@ class ViewPanel(QMainWindow):
         self.setStyleSheet('font-size: 11pt;')
         # all'avvio del programma e' selezionata la radio A
         self.radio = "A"
-        self.portname = ""
-
-        ### TEST
-        self.portname = "/dev/pts/26"
-
+        self.portnum = ""
         self.nantenne = 8
         self.nrelay = 24
         # indica se sono in ascolto o no
@@ -45,7 +41,8 @@ class ViewPanel(QMainWindow):
         self.setActionsEnableState()
 
         ### TEST
-        self.start_action.setEnabled(True)
+        #self.portnum = "/dev/pts/26"
+        #self.start_action.setEnabled(True)
 
     def initAction(self):
         # azione per uscire dall'applicazione
@@ -93,7 +90,7 @@ class ViewPanel(QMainWindow):
         com_c = QComboBox(self)
         self.com_list = list(serial.tools.list_ports.comports())
         # imposto la porta selezionata con il primo elemento della lista
-        self.portname = self.com_list[0][0]
+        self.portnum = self.com_list[0][0]
         for ser in self.com_list:
             com_c.addItem(ser[1])
         com_c.activated.connect(self.selectCom)
@@ -193,9 +190,9 @@ class ViewPanel(QMainWindow):
 
     def selectCom(self, i):
         #print self.com_list[i]
-        self.portname = self.com_list[i][0]
-        #print self.portname
-        self.statusBar().showMessage("Selected COM port: " + self.portname)
+        self.portnum = self.com_list[i][0]
+        #print self.portnum
+        self.statusBar().showMessage("Selected COM port: " + self.portnum)
         self.setActionsEnableState()
 
     def selectRadio(self, radioButton):
@@ -214,7 +211,11 @@ class ViewPanel(QMainWindow):
         """
             Start the listening: ComMonitorThread thread and the update timer
         """
-        if self.com_monitor is not None or self.portname == '':
+
+        ### TEST
+        #self.portnum = "/dev/pts/27"
+
+        if self.com_monitor is not None or self.portnum == '':
             return
         ###
         ### Chiedere ad Enrico per il timeout
@@ -222,7 +223,7 @@ class ViewPanel(QMainWindow):
         self.com_monitor = ComMonitorThread(
             data_q=self.data_q,
             error_q=self.error_q,
-            port_num=self.portname,
+            port_num=self.portnum,
             port_timeout=5)
         self.com_monitor.start()
         # prendo un elemento dalla coda, se non trovo niente rimango in
@@ -232,11 +233,11 @@ class ViewPanel(QMainWindow):
             self.criticalMessage('ComMonitorThread error', com_error)
             self.com_monitor = None
             self.warningMessage('Error', "L'ascolto verra' fermato" +
-                " perche' impossibile collegarsi alla porta: " + self.portname)
+                " perche' impossibile collegarsi alla porta: " + self.portnum)
             self.statusBar().showMessage("Error")
         else:
             #print "Sono in startListening e sta per partire il " +
-            #    "monitoraggio sulla porta: " + self.portname
+            #    "monitoraggio sulla porta: " + self.portnum
             self.monitor_active = True
             self.setActionsEnableState()
 
@@ -372,7 +373,7 @@ class ViewPanel(QMainWindow):
         self.livefeed.addData(listdata[0], listdata[1])
 
     def setActionsEnableState(self):
-        if self.portname == '':
+        if self.portnum == '':
             start_enable = stop_enable = False
         else:
             start_enable = not self.monitor_active
