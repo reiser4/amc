@@ -1,8 +1,10 @@
-import sys, time, Queue
+import sys, time, os.path, Queue
 import serial.tools.list_ports
 from com_monitor import ComMonitorThread
 from livedatafeed import LiveDataFeed
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QAction, QHBoxLayout,
+    QVBoxLayout, QGridLayout, QComboBox, QLabel, QRadioButton, QButtonGroup,
+    QGroupBox, QWidget, QDesktopWidget, QMessageBox)
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtCore import Qt, QTimer
 
@@ -46,18 +48,27 @@ class ViewPanel(QMainWindow):
 
     def initAction(self):
         # azione per uscire dall'applicazione
-        self.exit_action = QAction(QIcon("icons/exit.png"), "&Exit", self)
+        self.exit_action = QAction(
+            QIcon(os.path.join("icons", "exit.png")),
+            "&Exit",
+            self)
         self.exit_action.setShortcut("Ctrl+Q")
         self.exit_action.setStatusTip("Exit application")
         # collego l'azione exit_action all'evento self.close (gia' presete in PyQT)
         self.exit_action.triggered.connect(self.close)
 
-        self.start_action = QAction(QIcon("icons/start.png"), "&Start", self)
+        self.start_action = QAction(
+            QIcon(os.path.join("icons", "start.png")),
+            "&Start",
+            self)
         self.start_action.setShortcut("Ctrl+S")
         self.start_action.setStatusTip("Start listening")
         self.start_action.triggered.connect(self.startListening)
 
-        self.stop_action = QAction(QIcon("icons/stop.png"), "&Stop", self)
+        self.stop_action = QAction(
+            QIcon(os.path.join("icons", "stop.png")),
+            "&Stop",
+            self)
         self.stop_action.setShortcut("Ctrl+B")
         self.stop_action.setStatusTip("Stop listening")
         self.stop_action.triggered.connect(self.stopListening)

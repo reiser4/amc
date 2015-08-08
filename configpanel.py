@@ -1,6 +1,9 @@
 import sys, os, json
 import serial.tools.list_ports
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QAction, QTabWidget,
+    QWidget, QLabel, QGridLayout, QProgressBar, QCheckBox, QLineEdit,
+    QDesktopWidget, QMessageBox, QFileDialog, QDialog, QHBoxLayout,
+    QVBoxLayout, QComboBox, QPushButton)
 from PyQt5.QtGui import QIcon, QKeySequence, QFont
 from PyQt5.QtCore import QCoreApplication, Qt
 
@@ -42,7 +45,10 @@ class ConfigurationPanel(QMainWindow):
 
     def initAction(self):
         # azione per uscire dall'applicazione
-        self.exitAction = QAction(QIcon("icons/exit.png"), "&Exit", self)
+        self.exitAction = QAction(
+            QIcon(os.path.join("icons", "exit.png")),
+            "&Exit",
+            self)
         self.exitAction.setShortcut("Ctrl+Q")
         self.exitAction.setStatusTip("Exit application")
         # collego l'azione exitAction all'evento self.close (gia' presente in PyQT)
@@ -50,7 +56,7 @@ class ConfigurationPanel(QMainWindow):
 
         # azione per caricare la configurazione da file
         self.openAction = QAction(
-            QIcon("icons/open-configuration.png"),
+            QIcon(os.path.join("icons", "open-configuration.png")),
             "&Load configuration",
             self)
         self.openAction.setShortcut("Ctrl+L")
@@ -60,7 +66,7 @@ class ConfigurationPanel(QMainWindow):
 
         # azione per salvare la configurazione su file
         self.saveAction = QAction(
-            QIcon("icons/save-configuration.png"),
+            QIcon(os.path.join("icons", "save-configuration.png")),
             "&Save configuration",
             self)
         self.saveAction.setShortcut("Ctrl+S")
@@ -69,7 +75,7 @@ class ConfigurationPanel(QMainWindow):
 
         # azione per spedire la configurazione al beaglebone
         self.uploadAction = QAction(
-            QIcon("icons/upload-configuration.png"),
+            QIcon(os.path.join("icons", "upload-configuration.png")),
             "&Upload configuration",
             self)
         self.uploadAction.setShortcut("Ctrl+B")
@@ -78,7 +84,7 @@ class ConfigurationPanel(QMainWindow):
 
         # azione per spedire la configurazione al beaglebone
         self.uploadAction2 = QAction(
-            QIcon("icons/upload-configuration2.png"),
+            QIcon(os.path.join("icons", "upload-configuration2.png")),
             "&Upload configuration",
             self)
         self.uploadAction2.setShortcut("Ctrl+B")
@@ -474,7 +480,7 @@ class UploadConfigurationPanel(QDialog):
         if fname:
             #print fname
             try:
-                name = fname.split('/')[-1]
+                name = os.path.split(fname)[-1]
                 self.selectfile_lbl.setText(name)
                 with open(fname, 'r') as fin:
                     self.configuration = json.dumps(json.load(fin))
