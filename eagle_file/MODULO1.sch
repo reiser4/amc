@@ -28,7 +28,7 @@
 <layer number="18" name="Vias" color="2" fill="1" visible="no" active="no"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="no" active="no"/>
 <layer number="20" name="Dimension" color="15" fill="1" visible="no" active="no"/>
-<layer number="21" name="tPlace" color="16" fill="1" visible="no" active="no"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="no" active="no"/>
 <layer number="22" name="bPlace" color="7" fill="1" visible="no" active="no"/>
 <layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="no"/>
 <layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="no"/>
@@ -58,7 +58,7 @@
 <layer number="48" name="Document" color="7" fill="1" visible="no" active="no"/>
 <layer number="49" name="Reference" color="7" fill="1" visible="no" active="no"/>
 <layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
-<layer number="51" name="tDocu" color="14" fill="1" visible="no" active="no"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="no" active="no"/>
 <layer number="52" name="bDocu" color="7" fill="1" visible="no" active="no"/>
 <layer number="53" name="tGND_GNDA" color="7" fill="9" visible="no" active="no"/>
 <layer number="54" name="bGND_GNDA" color="1" fill="9" visible="no" active="no"/>
@@ -893,18 +893,18 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="6.35" y1="7.62" x2="6.35" y2="-7.62" width="0.127" layer="21"/>
 <wire x1="6.35" y1="-7.62" x2="-6.35" y2="-7.62" width="0.127" layer="21"/>
 <wire x1="-6.35" y1="-7.62" x2="-6.35" y2="7.62" width="0.127" layer="21"/>
-<pad name="1" x="-5.08" y="6.35" drill="0.8"/>
-<pad name="2" x="-5.08" y="3.81" drill="0.8"/>
-<pad name="3" x="-5.08" y="1.27" drill="0.8"/>
-<pad name="4" x="-5.08" y="-1.27" drill="0.8"/>
-<pad name="5" x="-5.08" y="-3.81" drill="0.8"/>
-<pad name="6" x="-5.08" y="-6.35" drill="0.8"/>
-<pad name="12" x="5.08" y="6.35" drill="0.8"/>
-<pad name="11" x="5.08" y="3.81" drill="0.8"/>
-<pad name="10" x="5.08" y="1.27" drill="0.8"/>
-<pad name="9" x="5.08" y="-1.27" drill="0.8"/>
-<pad name="8" x="5.08" y="-3.81" drill="0.8"/>
-<pad name="7" x="5.08" y="-6.35" drill="0.8"/>
+<pad name="1" x="-5.08" y="6.35" drill="0.8" diameter="1.905"/>
+<pad name="2" x="-5.08" y="3.81" drill="0.8" diameter="1.905"/>
+<pad name="3" x="-5.08" y="1.27" drill="0.8" diameter="1.905"/>
+<pad name="4" x="-5.08" y="-1.27" drill="0.8" diameter="1.905"/>
+<pad name="5" x="-5.08" y="-3.81" drill="0.8" diameter="1.905"/>
+<pad name="6" x="-5.08" y="-6.35" drill="0.8" diameter="1.905"/>
+<pad name="12" x="5.08" y="6.35" drill="0.8" diameter="1.905"/>
+<pad name="11" x="5.08" y="3.81" drill="0.8" diameter="1.905"/>
+<pad name="10" x="5.08" y="1.27" drill="0.8" diameter="1.905"/>
+<pad name="9" x="5.08" y="-1.27" drill="0.8" diameter="1.905"/>
+<pad name="8" x="5.08" y="-3.81" drill="0.8" diameter="1.905"/>
+<pad name="7" x="5.08" y="-6.35" drill="0.8" diameter="1.905"/>
 <text x="-2.54" y="5.08" size="1.27" layer="125">&gt;Name</text>
 <text x="-2.54" y="-5.08" size="1.27" layer="127">&gt;Value</text>
 </package>
@@ -2118,13 +2118,13 @@ We've spent an enormous amount of time creating and checking these footprints an
 You are welcome to use this library for commercial purposes. For attribution, we ask that when you begin to sell your device using our footprint, you email us with a link to the product being sold. We want bragging rights that we helped (in a very small part) to create your 8th world wonder. We would like the opportunity to feature your device on our homepage.</description>
 <packages>
 <package name="MYTRIMM">
-<pad name="1" x="-2.54" y="0" drill="0.8"/>
-<pad name="2" x="0" y="2.54" drill="0.8"/>
-<pad name="3" x="2.54" y="0" drill="0.8"/>
-<wire x1="-3.81" y1="3.81" x2="-3.81" y2="-1.27" width="0.127" layer="21"/>
-<wire x1="-3.81" y1="-1.27" x2="3.81" y2="-1.27" width="0.127" layer="21"/>
-<wire x1="3.81" y1="-1.27" x2="3.81" y2="3.81" width="0.127" layer="21"/>
-<wire x1="3.81" y1="3.81" x2="-3.81" y2="3.81" width="0.127" layer="21"/>
+<pad name="1" x="-2.54" y="0" drill="0.8" diameter="1.905"/>
+<pad name="2" x="0" y="2.54" drill="0.8" diameter="1.905"/>
+<pad name="3" x="2.54" y="0" drill="0.8" diameter="1.905"/>
+<wire x1="-4.445" y1="4.445" x2="-4.445" y2="-1.905" width="0.127" layer="21"/>
+<wire x1="-4.445" y1="-1.905" x2="4.445" y2="-1.905" width="0.127" layer="21"/>
+<wire x1="4.445" y1="-1.905" x2="4.445" y2="4.445" width="0.127" layer="21"/>
+<wire x1="4.445" y1="4.445" x2="-4.445" y2="4.445" width="0.127" layer="21"/>
 <text x="-2.54" y="5.08" size="1.27" layer="25">&gt;Name</text>
 <text x="-2.54" y="-3.81" size="1.27" layer="27">&gt;Value</text>
 </package>

@@ -7,6 +7,8 @@ Desktop="Desktop"
 
 [Globals]
 AutoSaveProject=1
+UsedLibrary="C:/EAGLE-7.1.0/lbr/microchip.lbr"
+UsedLibrary="C:/EAGLE-7.1.0/lbr/pinhead.lbr"
 UsedLibrary="C:/Users/Max/Documents/SparkFun-Eagle-Libraries-master/GeekAmmo.lbr"
 UsedLibrary="C:/Users/Max/Documents/SparkFun-Eagle-Libraries-master/LilyPad-Wearables.lbr"
 UsedLibrary="C:/Users/Max/Documents/SparkFun-Eagle-Libraries-master/SparkFun-Aesthetics.lbr"

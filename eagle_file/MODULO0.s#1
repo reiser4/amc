@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.3.0">
+<eagle version="7.1.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -2098,13 +2098,6 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <busses>
 </busses>
 <nets>
-<net name="N$1" class="0">
-<segment>
-<pinref part="JP1" gate="G$1" pin="1"/>
-<pinref part="U$1" gate="P9" pin="DGND@1"/>
-<wire x1="50.8" y1="71.12" x2="78.74" y2="71.12" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="N$2" class="0">
 <segment>
 <pinref part="JP1" gate="G$1" pin="2"/>
@@ -2193,6 +2186,18 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <wire x1="152.4" y1="0" x2="152.4" y2="60.96" width="0.1524" layer="91"/>
 <pinref part="JP2" gate="G$1" pin="5"/>
 <wire x1="152.4" y1="60.96" x2="160.02" y2="60.96" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="GND" class="0">
+<segment>
+<pinref part="JP1" gate="G$1" pin="1"/>
+<wire x1="50.8" y1="71.12" x2="58.42" y2="71.12" width="0.1524" layer="91"/>
+<label x="50.8" y="71.12" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="U$1" gate="P9" pin="DGND@1"/>
+<wire x1="78.74" y1="71.12" x2="68.58" y2="71.12" width="0.1524" layer="91"/>
+<label x="71.12" y="71.12" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
