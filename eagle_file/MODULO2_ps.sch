@@ -5145,12 +5145,12 @@ Package for relay hk4100</description>
 <wire x1="8.89" y1="6.35" x2="8.89" y2="-6.35" width="0.2032" layer="21"/>
 <wire x1="8.89" y1="-6.35" x2="-8.89" y2="-6.35" width="0.2032" layer="21"/>
 <wire x1="-8.89" y1="-6.35" x2="-8.89" y2="6.35" width="0.2032" layer="21"/>
-<pad name="7" x="-7.62" y="5.08" drill="1.016"/>
-<pad name="6" x="-5.08" y="5.08" drill="1.016"/>
-<pad name="1" x="7.62" y="5.08" drill="1.016"/>
-<pad name="14" x="7.62" y="-5.08" drill="1.016"/>
-<pad name="9" x="-5.08" y="-5.08" drill="1.016"/>
-<pad name="8" x="-7.62" y="-5.08" drill="1.016"/>
+<pad name="7" x="-7.62" y="5.08" drill="1.016" diameter="1.905"/>
+<pad name="6" x="-5.08" y="5.08" drill="1.016" diameter="1.905"/>
+<pad name="1" x="7.62" y="5.08" drill="1.016" diameter="1.905"/>
+<pad name="14" x="7.62" y="-5.08" drill="1.016" diameter="1.905"/>
+<pad name="9" x="-5.08" y="-5.08" drill="1.016" diameter="1.905"/>
+<pad name="8" x="-7.62" y="-5.08" drill="1.016" diameter="1.905"/>
 <text x="-3.81" y="1.27" size="1.27" layer="25">&gt;Name</text>
 <text x="-3.81" y="-1.27" size="1.27" layer="27">&gt;Value</text>
 </package>
@@ -7404,7 +7404,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <part name="JP8" library="SparkFun-Connectors" deviceset="M03" device="-SCREW-5MM"/>
 <part name="JP9" library="SparkFun-Connectors" deviceset="M03" device="-SCREW-5MM"/>
 <part name="GND1" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
-<part name="JP1" library="SparkFun-Connectors" deviceset="M06" device="LOCK"/>
+<part name="JP1" library="SparkFun-Connectors" deviceset="M06" device="SILK_FEMALE_PTH"/>
 <part name="SUPPLY1" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
 </parts>
 <sheets>

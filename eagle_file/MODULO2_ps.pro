@@ -2,24 +2,24 @@ EAGLE AutoRouter Statistics:
 
 Job           : C:/Users/Max/Documents/amc/eagle_file/MODULO2_ps.brd
 
-Start at      : 15:35:38 (03/09/2015)
-End at        : 15:35:56 (03/09/2015)
-Elapsed time  : 00:00:13
+Start at      : 18:05:20 (11/09/2015)
+End at        : 18:08:12 (11/09/2015)
+Elapsed time  : 00:00:01
 
-Signals       :    30   RoutingGrid: 9.84252 mil  Layers: 1
+Signals       :    30   RoutingGrid: 19.685 mil  Layers: 1
 Connections   :    52   predefined:  4 ( 0 Vias )
 
-Router memory :   170748
+Router memory :   44902
 
 Passname          :    Busses     Route Optimize1 Optimize2 Optimize3 Optimize4
 
-Time per pass     :  00:00:00  00:00:10  00:00:01  00:00:01  00:00:00  00:00:01
-Number of Ripups  :         0       102         0         0         0         0
-max. Level        :         0         3         0         0         0         0
-max. Total        :         0        17         0         0         0         0
+Time per pass     :  00:00:00  00:00:00  00:00:00  00:00:01  00:00:00  00:00:00
+Number of Ripups  :         0        11         0         0         0         0
+max. Level        :         0         1         0         0         0         0
+max. Total        :         0        12         0         0         0         0
 
-Routed            :        13        48        48        48        48        48
+Routed            :        18        48        48        48        48        48
 Vias              :         0         0         0         0         0         0
-Resolution        :    32.7 %   100.0 %   100.0 %   100.0 %   100.0 %   100.0 %
+Resolution        :    42.3 %   100.0 %   100.0 %   100.0 %   100.0 %   100.0 %
 
-Final             : 94.2% finished. Polygons may have fallen apart.
+Final             : 88.9% finished. Polygons may have fallen apart.
