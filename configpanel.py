@@ -301,7 +301,7 @@ class ConfigurationPanel(QMainWindow):
             else:
                 # -25 perche' sarebbe -26 (numero oggetti) + 1 (perche' non voglio partire da 0 ma da 1)
                 ptype = "radioB, relay " + str(location[1]-25) # attenzione alla "label"
-            print "Posizione decodificata: banda ", band, ", preset numero ", presetnumber, ", tipo ", ptype
+            print("Posizione decodificata: banda ", band, ", preset numero ", presetnumber, ", tipo ", ptype)
 
     def saveConfiguration(self):
         tmpwrite = '{"relayconfig":{\n'
@@ -387,7 +387,8 @@ class ConfigurationPanel(QMainWindow):
                                 self.radio1cb_matrix[self.bands.index(tab)][int(row)][i].setCheckState(Qt.Checked)
                             if relayB[i] == '1':
                                 self.radio2cb_matrix[self.bands.index(tab)][int(row)][i].setCheckState(Qt.Checked)
-            except Exception, e:
+            #except Exception e:
+            except e:
                 QMessageBox.warning(self, 'Errore', str(e))
 
     def uploadConfiguration(self):
@@ -489,7 +490,7 @@ class UploadConfigurationPanel(QDialog):
                 if self.portnum:
                     # Abilito il pulsante per mandare il file
                     self.upload_btn.setEnabled(True)
-            except Exception, e:
+            except e: #Exception, e:
                 QMessageBox.warning(self, 'Errore', str(e))
 
     def uploadFile(self):
@@ -507,7 +508,7 @@ class UploadConfigurationPanel(QDialog):
                 self.progressBar.setValue(100)
                 comwrite.close()
                 self.informationMessage('Uploaded', 'File uploaded successfully')
-            except Exception, e:
+            except e: #Exception, e:
                 self.criticalMessage('Errore', e.message)
         else:
             self.warningMessage('Error', 'Selezionare una porta ed un file')

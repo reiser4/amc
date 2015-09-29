@@ -10,7 +10,8 @@ __pycache__/
 env/
 build/
 develop-eggs/
-dist/
+###dist/
+# eseguibile standalone python
 downloads/
 eggs/
 .eggs/

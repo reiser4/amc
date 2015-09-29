@@ -1,4 +1,4 @@
-import Queue
+#import Queue
 import serial
 
 class ComWrite:
@@ -23,7 +23,7 @@ class ComWrite:
                 self.serial_port = serial.Serial(**self.serial_arg)
                 self.isOpen = True
                 #return True
-            except serial.SerialException, e:
+            except e: #serial.SerialException, e:
                 raise
                 #return False
 
