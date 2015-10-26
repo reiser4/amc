@@ -4,11 +4,13 @@
 
 import os
 
+
+
 if not os.path.isfile('/sys/class/gpio/gpio5/value'):
 	print "Abilito gpio 5..."
+	os.system('enablegpio5.sh')
 	os.system('echo 5 > /sys/class/gpio/export')
 	os.system('echo "out" > /sys/class/gpio/gpio5/direction')
-	os.system('enablegpio5.sh')
 
 if not os.path.isfile('/sys/class/gpio/gpio3/value'):
 	print "Abilito gpio 3..."
@@ -65,8 +67,8 @@ class ShiftRegister:
 				self.enableSER()
 			else:
 				self.disableSER()
-		self.enableSRCLK()
-		self.disableSRCLK()
+			self.enableSRCLK()
+			self.disableSRCLK()
 		self.enableRCLK()
 
 
