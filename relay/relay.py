@@ -3,12 +3,14 @@
 ### script relay: scrive su GPIO cio` che legge da /tmp/relay.txt
 
 import os
-
+import sys
+sys.path.insert(0, '../common')
+from atomicwrite import AtomicWrite
 
 
 if not os.path.isfile('/sys/class/gpio/gpio5/value'):
 	print "Abilito gpio 5..."
-	os.system('enablegpio5.sh')
+	os.system('./enablegpio5.sh')
 	os.system('echo 5 > /sys/class/gpio/export')
 	os.system('echo "out" > /sys/class/gpio/gpio5/direction')
 
@@ -22,6 +24,8 @@ if not os.path.isfile('/sys/class/gpio/gpio2/value'):
 	os.system('echo 2 > /sys/class/gpio/export')
 	os.system('echo "out" > /sys/class/gpio/gpio2/direction')
 
+if not os.path.isfile('/tmp/relay.txt'):
+	AtomicWrite.writeFile('/tmp/relay.txt', '0000000000000000000000000')
 
 
 def readFile(filename):
