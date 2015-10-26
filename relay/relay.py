@@ -25,6 +25,7 @@ if not os.path.isfile('/sys/class/gpio/gpio2/value'):
 	os.system('echo "out" > /sys/class/gpio/gpio2/direction')
 
 if not os.path.isfile('/tmp/relay.txt'):
+	print "File relay non trovato..."
 	AtomicWrite.writeFile('/tmp/relay.txt', '0000000000000000000000000')
 
 

@@ -1,63 +1,55 @@
-####
 
-import png
+from rg16080b import RG16080B
+#from display import Display
+from gfx import Gfx
+from time import sleep
+
+import sys
+import os
+sys.path.insert(0, '../common')
+from atomicwrite import AtomicWrite
+
+if not os.path.isfile('/tmp/band.txt'):
+	print "File banda non trovato..."
+	AtomicWrite.writeFile('/tmp/band.txt', "40")
+
+if not os.path.isfile('/tmp/relay.txt'):
+	print "File relay non trovato..."
+	AtomicWrite.writeFile('/tmp/relay.txt', '0000000000000000000000000')
 
 
-class Display:
-    def __init__(self, output):
-        if output == "dummy":
-            print "Avviato display con output dummy"
-            print "Dimensioni: 160x80"
-        self.data = []
-        for x in range(0,80):
-            self.data.append([])
-            for y in range(0,160):
-                self.data[x].append(153)
-                self.data[x].append(204)
-                self.data[x].append(255)
+def getFileContent(filename):
+        txt = open(filename)
+        return txt.read()
 
-    def setPixel(self, x, y, state):
-        ### stati possibili: True (acceso) e False (spento)
-        ### x e` la colonna, y e` la riga
-        if state == True:
-            self.data[x][y*3] = 255
-            self.data[x][y*3+1] = 255
-            self.data[x][y*3+2] = 255
-        else:
-            self.data[x][y*3] = 153
-            self.data[x][y*3+1] = 204
-            self.data[x][y*3+2] = 255
+rg16080b = RG16080B()
+#display = Display("dummy")
+mygfx = Gfx()
 
-    def writePng(self):
-        png.from_array(self.data, "RGB").save('webroot/display.png')
+while True:
 
-    def writeChar(self, startx, starty, char):
-        for y in range(0,charwidth):    
-            for x in range(0,charheight):
-                if font[char][x][y] == 1:
-                    self.setPixel(startx+x, starty+y, True)
-                else:
-                    self.setPixel(startx+x, starty+y, False)
+	mygfx.clear()
 
-    def writeWord(self, startx, starty, word):
-        for i in list(word):
-            if i == " ":
-                starty += 3
-            else:
-                self.writeChar(startx, starty, i)
-                starty += charwidth+1
+	### ricavo i dati
+	band = getFileContent("/tmp/band.txt")
+	relay = getFileContent("/tmp/relay.txt")
 
-    def writeLine(self, startx, starty, npixel, direction):
-        ### x e` la colonna, y e` la riga
-        if direction == "o":
-            for y in range(starty, starty+npixel):
-                self.setPixel(startx, y, True)
-        elif direction == "v":
-            for x in range(startx, startx+npixel):
-                self.setPixel(x, starty, True)
-    
-    def writeRect(self, startx, starty, width, height):
-        ### x e` la colonna, y e` la riga
-        for h in xrange(height):
-            self.writeLine(startx+h, starty, width, "o")
+	### stampo a schermo
+	mygfx.writeText(20,0,"BANDA: " + band)
+	mygfx.writeText(5,30,"RELAY: " + relay)
 
+
+
+	data = mygfx.getData()
+#	for i in range(0,160*80):
+#	        y = i / 160
+#        	x = i % 160
+#        	if data[i] == "1":
+#                	display.setPixel(y,x,True)
+
+	rg16080b.writePixels(data)
+	#display.writePng()
+	### attendo
+	
+	sleep(0.1)
+	print "Fine ciclo"

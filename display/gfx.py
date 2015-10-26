@@ -12,9 +12,12 @@ class Gfx:
 		self.draw.line((0,0)+self.img.size,fill=128)
 		self.draw.line((0, self.img.size[1], self.img.size[0], 0), fill=128)
 		
+	def clear(self):
+		self.draw.rectangle([0, 0, 160, 80], fill=(0), outline=None)
+
 
 	def writeText(self,x,y,word):
-                self.draw.text((x,y), word, font=self.font, fill=(255))
+		self.draw.text((x,y), word, font=self.font, fill=(255))
 
 	def __init__(self):
 		self.width = 160
