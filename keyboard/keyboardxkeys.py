@@ -4,6 +4,7 @@ Classe per la lettura della tastiera collegata via usb
 import threading
 import os, sys
 from evdev import InputDevice, list_devices, categorize, ecodes
+sys.path.insert(0, '../common')
 from atomicwrite import AtomicWrite
 
 class HandlerKeyboards(object):
@@ -18,7 +19,7 @@ class HandlerKeyboards(object):
         '''
         
         #if usbdevice == "isa0060/serio0/input0":
-        if usbdevice == "usb-musb-hdrc.1.auto-1/input1":
+        if usbdevice == "usb-musb-hdrc.1.auto-1.1/input1":
             print "Tastiera 1: " + usbdevice
             self.keyboard = "1"
             self.radio = "A"
@@ -74,7 +75,7 @@ class ReadKeyboard(threading.Thread):
     
     def run(self):
         print "##### -> Sono nel thread per l'ascolto della tastiera"
-        filename_keystate = "/tmp/radio" + self.radio + ".txt"
+        filename_keystate = "/tmp/preset" + self.radio + ".txt"
         dict_keystate = { '11': 0, '2': 1, '3': 2, '4': 3, '5': 4, '6': 5, '7': 6, '8': 7, '9': 8, '10': 9, '30': 10, '48': 11, '46': 12, '32': 13, '18': 14, '33': 15}
 
         if os.path.isfile(filename_keystate):
@@ -84,8 +85,8 @@ class ReadKeyboard(threading.Thread):
             print "stato: " + str(str_keystate)
             f_keystate.close()
         else:
-            print "Il file "+filename_keystate+" non esiste, lo creo con stato '1000000000000000'"
-            str_keystate = "1000000000000000"
+            print "Il file "+filename_keystate+" non esiste, lo creo con stato '0000000000000000'"
+            str_keystate = "0000000000000000"
             AtomicWrite.writeFile(filename_keystate, str_keystate)
             
 
@@ -150,7 +151,7 @@ class ReadKeyboard(threading.Thread):
                     print str(self.dev.phys) + " Nuovo keystate: " + str(keystate)
                     '''
                     #AtomicWrite.writeFile("/tmp/radio" + self.radio + type + ".txt", chr(int(ks,2)))
-                    AtomicWrite.writeFile("/tmp/radio"+self.radio+".txt",str_keystate)
+                    AtomicWrite.writeFile("/tmp/preset"+self.radio+".txt",str_keystate)
 
                 except Exception as e:
                     print(e)
