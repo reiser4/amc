@@ -4,6 +4,15 @@
 from PIL import Image, ImageFont, ImageDraw
 
 class Gfx:
+	def drawCross(self):
+
+		#self.state = list()
+                #for i in range(0, self.width*self.height):
+                #        self.state.append(1)
+		self.draw.line((0,0)+self.img.size,fill=128)
+		self.draw.line((0, self.img.size[1], self.img.size[0], 0), fill=128)
+		
+
 	def writeText(self,x,y,word):
                 self.draw.text((x,y), word, font=self.font, fill=(255))
 

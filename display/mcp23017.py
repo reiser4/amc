@@ -30,7 +30,7 @@ class MCP23017:
 		#print "scrivo tutto",self.pins
 		i2c.write8(0x12, self.listToByte(self.pins, 0))
 		i2c.write8(0x13, self.listToByte(self.pins, 8))
-
+		#print "Scritto"
 	def listToByte(self, list, start):
 		out = ""
 		#print "Lista:",list

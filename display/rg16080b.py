@@ -5,7 +5,7 @@ class RG16080B:
 	def __init__(self):
 		print "Inizializzo rg16080b con i2c"
 		self.mcp23017 = MCP23017(1)
-		
+                self.setReset(0)		
 		self.setCS(0)
 		self.setReset(1)
 
@@ -19,7 +19,7 @@ class RG16080B:
 		self.setCharNumber(0,0,0,1,0,0,1,1)
 
 		print "Time division"
-		self.setTimeDivision(0,1,1,1,1,1,1,1)
+		self.setTimeDivision(1,0,1,0,0,0,0,0)
 
 		print "Cur.pos"
 		self.setCurPos(0,0,0,0)
@@ -32,12 +32,16 @@ class RG16080B:
 		self.setCursorLower(0,0,0,0,0,0,0,0)
                 self.setCursorUpper(0,0,0,0,0,0,0,0)
 
-		print "Display data"
-		self.writeDisplayData(0,1,0,1,0,1,0,1)
+		#print "Display data"
+		#self.writeDisplayData(0,1,0,1,0,1,0,1)
 
 
 	def writePixels(self, sequence):
 		print "Sequenza:",sequence
+		print "Len:",len(sequence)
+                self.setCursorLower(0,0,0,0,0,0,0,0)
+                self.setCursorUpper(0,0,0,0,0,0,0,0)
+
 
 		i = 0
 		while i < len(sequence):	
@@ -61,13 +65,13 @@ class RG16080B:
 
 	def setRW(self, state):
 		#print "RW",state
-		self.mcp23017.writePin("A", 6, state)
+		self.mcp23017.writePin("A", 1, state)
         def setRS(self, state):
 		#print "RS",state
-                self.mcp23017.writePin("A", 7, state)
+                self.mcp23017.writePin("A", 0, state)
         def setE(self, state):
 		#print "E", state
-                self.mcp23017.writePin("A", 5, state)
+                self.mcp23017.writePin("A", 2, state)
         def setDB0(self, state):
                 self.mcp23017.writePin("B", 7, state)
         def setDB1(self, state):
@@ -85,9 +89,9 @@ class RG16080B:
         def setDB7(self, state):
                 self.mcp23017.writePin("B", 0, state)
         def setCS(self, state):
-                self.mcp23017.writePin("A", 4, state)
-        def setReset(self, state):
                 self.mcp23017.writePin("A", 3, state)
+        def setReset(self, state):
+                self.mcp23017.writePin("A", 4, state)
 
 	
 
@@ -143,8 +147,10 @@ class RG16080B:
 
         def writeDisplayData(self, DB7, DB6, DB5, DB4, DB3, DB2, DB1, DB0):
                 self.setPins(0,1,0,0,0,0,1,1,0,0)
-                self.setPins(0,0,DB7,DB6,DB5,DB4,DB3,DB2,DB1,DB0)
-                self.mcp23017.writeData()
+                ### bit invertiti!
+		##self.setPins(0,0,DB7,DB6,DB5,DB4,DB3,DB2,DB1,DB0)
+                self.setPins(0,0,DB0,DB1,DB2,DB3,DB4,DB5,DB6,DB7)
+		self.mcp23017.writeData()
 
         def writeBit(self, DB2, DB1, DB0):
                 self.setPins(0,1,0,0,0,0,1,1,1,0)
