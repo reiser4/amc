@@ -89,3 +89,9 @@ SERIAL:
 	LEGGE: /tmp/presetA.txt /tmp/presetB.txt /tmp/tx.txt /tmp/band.txt /tmp/presetTXTA.txt /tmp/presetTXTB.txt /root/amc/config.json
 	SCRIVE: /root/amc/config.json
 
+RELAY:
+	scrive su GPIO le uscite relay
+	LEGGE: /tmp/relay.txt
+
+CHECK:
+	verifica che tutti i processi siano in esecuzione ed avvia eventuali processi fermi.
