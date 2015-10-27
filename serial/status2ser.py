@@ -67,6 +67,7 @@ def getRelay():
 def serWrite(T,C):
 	stringa = T + ":" + C + "\n"
 	ser.write(stringa)
+	print "Mando stringa",stringa
 	with open("/tmp/ser-out.txt", "a") as myfile:
 		myfile.write(stringa)
 

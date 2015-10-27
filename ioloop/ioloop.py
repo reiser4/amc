@@ -17,7 +17,7 @@ if not os.path.isfile('/tmp/relay.txt'):
 # todo: far lavorare col vero GPIO
 
 while True:
-	time.sleep(6)
-	AtomicWrite.writeFile('/tmp/tx.txt', 'A')
-	time.sleep(2)
+	#time.sleep(6)
+	#AtomicWrite.writeFile('/tmp/tx.txt', 'A')
+	#time.sleep(2)
 	AtomicWrite.writeFile('/tmp/tx.txt', '')

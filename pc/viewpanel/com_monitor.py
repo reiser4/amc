@@ -85,9 +85,9 @@ class ComMonitorThread(threading.Thread):
             data = self.serial_port.read(1)
             #data += self.serial_port.read(self.serial_port.inWaiting())
             data += self.serial_port.readline()
-            print("Data: ", data)
+            ##print("Data: ", data)
             data_list = data.split(b':')
-            print(data_list)
+            ##print(data_list)
             if len(data_list) == 2:
                 data_type = data_list[0]
                 data_value = data_list[1].strip()
@@ -198,17 +198,17 @@ class ComMonitorThread(threading.Thread):
                 if btx:
                     print "btx ok"
                 """
-                if (apreset != False and
-                    bpreset != False and
-                    apnametx != False != False and
-                    apnamerx != False and
-                    bpnametx != False and
-                    bpnamerx != False and
-                    band != False and
-                    relay != False and
-                    atx != False and
-                    btx!= False ):
-                    print("Ho tutti i dati")
+                if ((not (apreset == '')) and
+                    (not (bpreset == '')) and
+                    (not (apnametx == '')) and
+                    (not (apnamerx == '')) and
+                    (not (bpnametx == '')) and
+                    (not (bpnamerx == '')) and
+                    (not (band == '')) and
+                    (not (relay == '')) and
+                    (not (atx == '')) and
+                    (not (btx == '')) ):
+                    #print("Ho tutti i dati")
                     #print "ComMonitorThread: sono dentro, sto per" +
                     #    " creare il dizionario"
                     timestamp = time.time()
@@ -237,12 +237,12 @@ class ComMonitorThread(threading.Thread):
                     atx = ''
                     btx = ''
                     error_value = False
-                else:
-                    print("Manca qualcosa...",apreset,bpreset,apnametx,apnamerx,bpnametx,bpnamerx,band,relay,atx,btx)
+                #else:
+                    #print("Manca qualcosa...",apreset,bpreset,apnametx,apnamerx,bpnametx,bpnamerx,band,relay,atx,btx)
             ###
             ### Chiedere ad Enrico per il timeout
             ###
-            time.sleep(0.1)
+            #time.sleep(0.1)
 
         # clean up
         if self.serial_port:
