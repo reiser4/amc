@@ -2,45 +2,66 @@
 import time
 import json
 
+
+import os
+import sys
+sys.path.insert(0, '../common')
+
 #import Adafruit_BBIO.GPIO as GPIO
 from atomicwrite import AtomicWrite
-from bcdin import BcdIn
-from bcdout import BcdOut
-from icomin import IcomIn
-from band import Band
+#from bcdin import BcdIn
+#from bcdout import BcdOut
+#from icomin import IcomIn
+#from band import Band
 from settings import Settings
-from radio import Radio
+#from radio import Radio
 from preset import Preset
-from front import Front
+#from front import Front
 from relay import Relay
 
+
+if not os.path.isfile('/tmp/band.txt'):
+	print "File banda non trovato..."
+	AtomicWrite.writeFile('/tmp/band.txt', "40")
+
+
+if not os.path.isfile('/tmp/tx.txt'):
+	print "File tx non trovato..."
+	AtomicWrite.writeFile('/tmp/tx.txt', "")
+
+
+
 relay = Relay()
-front = Front()
-icomin = IcomIn("P9_33")
-band = Band(icomin)
+#front = Front()
+#icomin = IcomIn("P9_33")
+#band = Band(icomin)
 settings = Settings()
-radioa = Radio("P9_15", "P9_29", "P8_19", "P8_7", "P8_9", "P8_11")
-radiob = Radio("P9_17", "P9_31", "P8_26", "P8_13", "P8_15", "P8_17")
+#radioa = Radio("P9_15", "P9_29", "P8_19", "P8_7", "P8_9", "P8_11")
+#radiob = Radio("P9_17", "P9_31", "P8_26", "P8_13", "P8_15", "P8_17")
 preset = Preset()
-txing = ""
+#txing = ""
 clear = True
 lastband = "-1"
+presetchanged = False
+oldpresetA = ""
+oldpresetB = ""
+#def tx(R,S):
+#	AtomicWrite.writeFile("/tmp/tx"+R+".txt",str(S))
 
 
-def tx(R,S):
-	AtomicWrite.writeFile("/tmp/tx"+R+".txt",str(S))
-
-
+def getFileContent(filename):
+        txt = open(filename)
+        return txt.read()
 
 while True:
 	### devo leggere la banda in cui mi trovo e scriverla sull'uscita del BCD.
 	### se necessario aggiornare i rele`, led e display
 	### valutare se rallentare questa operazione
 
-	myband = band.readBand()
+	myband = getFileContent("/tmp/band.txt")
 	if myband != lastband:
 		# rilevato cambio banda!
-		front.changeBand(myband)
+		##front.changeBand(myband)
 		lastband = myband
 
 	#print "Banda: " + str(myband)
@@ -50,22 +71,29 @@ while True:
 	#print "Logica: " + logic
 
 
-	presetA = preset.readPresetFile("/tmp/radioA.txt")
-	presetB = preset.readPresetFile("/tmp/radioB.txt")
+	presetA = preset.readPresetFile("/tmp/presetA.txt")
+	presetB = preset.readPresetFile("/tmp/presetB.txt")
+	if presetA != oldpresetA:
+		oldpresetA = presetA
+		presetchanged = True
+	if presetB != oldpresetB:
+		oldpresetB = presetB
+		presetchanged = True
 
-	print "Preset A: " + presetA
-	print "Preset B: " + presetB
+	#print "Preset A: " + presetA
+	###print "Preset B: " + presetB
 	
-	with open("test-config.json", 'r') as fin:
+	#todo: fare solo se necessario
+	with open("/root/amc/config.json", 'r') as fin:
 		configuration = json.load(fin)
-	#print configuration
+	###print configuration
 
 	bandconfiguration = configuration['relayconfig'][str(myband)+'m']
-	print bandconfiguration
+	###print bandconfiguration
 
 
-        AtomicWrite.writeFile("/tmp/Apname.txt",preset.getPname(presetA,bandconfiguration,"A"))
-        AtomicWrite.writeFile("/tmp/Bpname.txt",preset.getPname(presetA,bandconfiguration,"B"))
+	AtomicWrite.writeFile("/tmp/presetTXTA.txt",preset.getPname(presetA,bandconfiguration,"A"))
+	####AtomicWrite.writeFile("/tmp/Bpname.txt",preset.getPname(presetA,bandconfiguration,"B"))
 
 
 	#radioArx = "{0:b}".format(preset.readPresetFile("/tmp/radioArx.txt")).zfill(8)
@@ -92,8 +120,20 @@ while True:
 	#settings.setPreset("B","tx",radioBtx)
 	
 
-	pttA = radioa.readPTT()
-	pttB = radiob.readPTT()
+	###pttA = radioa.readPTT()
+	###pttB = radiob.readPTT()
+
+	txing = getFileContent("/tmp/tx.txt")
+	if txing == "":
+		pttA = False
+		pttB = False
+		
+	else:
+		if txing == "A":
+			pttA = True
+			pttB = False
+		else:
+			print "Situazione non gestita: txing =",txing
 
 	#print "Stato: clear: ", clear, " txing: ", txing
 
@@ -106,8 +146,8 @@ while True:
 				clear = False
 				txing = "A"
 				# ora vuole trasmettere la radio A
-				print "Richiesta di TX da Radio A"
-				print "Devo inibire radio B e iniziare la procedura di TX"
+				######print "Richiesta di TX da Radio A"
+				######print "Devo inibire radio B e iniziare la procedura di TX"
 				#relay.writeRelay(settings.getPreset("radioAtx"))
 				relayconfig = relay.relayConfigTx(presetA, "A", bandconfiguration)
 			else:	
@@ -116,8 +156,8 @@ while True:
 					clear = False
 					txing = "B"
 					# radio B vuole trasmettere
-					print "Richiesta di TX da Radio B"
-					print "Inibisco radio A e faccio procedura TX"
+					######print "Richiesta di TX da Radio B"
+					######print "Inibisco radio A e faccio procedura TX"
 					relayconfig = relay.relayConfigTx(presetB, "B", bandconfiguration)
 					#relay.writeRelay(settings.getPreset("radioBtx"))
 				else:
@@ -134,7 +174,7 @@ while True:
 				#stava trasmettendo A
 				if pttA == False:
 					#A ha appena finito di trasmettere
-					print "Procedura per ripristino ascolto (fine A)"
+					######print "Procedura per ripristino ascolto (fine A)"
 					relayconfig = relay.relayConfigRx(presetA, presetB, bandconfiguration)
 					#relay.writeRelay(settings.getPreset("rx"))
 					clear = True
@@ -143,7 +183,7 @@ while True:
 			else:
 				# stava trasmettendo B
 				if pttB == False:
-					print "Procedura per ripristino ascolto (fine B)"
+					######print "Procedura per ripristino ascolto (fine B)"
 					relayconfig = relay.relayConfigRx(presetA, presetB, bandconfiguration)
 					#relay.writeRelay(settings.getPreset("rx"))
 					clear = True
@@ -152,7 +192,7 @@ while True:
 	else:
 		print "Logica non first-one-wins non implementata."
 
-
+	'''
 	if clear:
 		tx("A",0)
 		tx("B",0)
@@ -163,12 +203,14 @@ while True:
 		else:
 			tx("A",0)
 			tx("B",1)
+	'''
 
+	#####print "Configurazione relay: " + relayconfig
 
-	print "Configurazione relay: " + relayconfig
+	AtomicWrite.writeFile("/tmp/relay.txt",relayconfig)
 
-	relay.writeRelay(relayconfig)
+	####relay.writeRelay(relayconfig)
 
-	time.sleep(1)
+	#time.sleep(1)
 
 

@@ -12,17 +12,17 @@ class Preset:
 
 
 	def getPname(self,preset,bandconfiguration,radio):
-		print "Richiesto Pname"
+		####print "Richiesto Pname"
 
 		rxant = ""
 		txant = ""
 
 		for i in range(0,16):
-			print "Posizione",i
+			####print "Posizione",i
 			val = preset[i]
-			print "Valore",val
+			####print "Valore",val
 			if val == "1":
-				print "Attivato"
+				####print "Attivato"
 				if i < 8:
 					if str(i) in bandconfiguration:
 						rxant = rxant + "," + bandconfiguration[str(i)]['label']
@@ -34,12 +34,12 @@ class Preset:
                                         else:
                                                 txant = txant + "," + "Tx"+str(i)
 
-		print preset
-		print bandconfiguration
-		print radio
+		###print preset
+		###print bandconfiguration
+		###print radio
 
 		out = rxant[1:] + ";" + txant[1:]
-		print "Output:",out
+		###print "Output:",out
 		return out
 
 	def readPreset(self):

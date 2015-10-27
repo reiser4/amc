@@ -34,11 +34,15 @@ while True:
 	band = getFileContent("/tmp/band.txt")
 	relay = getFileContent("/tmp/relay.txt")
 	presetA = getFileContent("/tmp/presetA.txt")
+	presetTXTA = getFileContent("/tmp/presetTXTA.txt")
+	tx = getFileContent("/tmp/tx.txt")
 
 	### stampo a schermo
 	mygfx.writeText(5,0,"BANDA: " + band)
 	mygfx.writeText(5,15,"RELAY: " + relay)
 	mygfx.writeText(5,30,"PRESET: " + presetA)
+	mygfx.writeText(5,45,"" + presetTXTA)
+	mygfx.writeText(5,60,"TX: " + tx)
 
 
 	data = mygfx.getData()

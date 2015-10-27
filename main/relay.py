@@ -25,7 +25,7 @@ class Relay:
 	def relayConfigTx(self, preset, radio, bandconfiguration):
 		relayconfig = list("0" * 24)
 		pos = 8
-		print "Trasmetto con preset " + preset[8:]
+		#print "Trasmetto con preset " + preset[8:]
 		for sel in preset[8:]:
 			if sel == "1":
 				if str(pos) in bandconfiguration:

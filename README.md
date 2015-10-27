@@ -40,17 +40,15 @@ il software AMC gira su beaglebone black. E` costituito da diversi componenti ch
 
 /tmp/presetTXTA.txt e /tmp/presetTXTB.txt
 	contiene la lista testuale di preset attivi (per essere stampato sul display)
-	senza spazi, separati da virgola
+	senza spazi, separati da virgola, poi punto e virgola tra Rx e Tx
 	esempio:
-		TX: Europa,Asia,America
-		RX: Asia
+		Europa,Asia,America;Asia
+
 
 /tmp/tx.txt
 	contiene la lista di radio che stanno trasmettendo in quel momento
 	esempio:
 		A
-		oppure
-		AB
 		oppure
 		B
 		oppure 

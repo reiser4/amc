@@ -1,4 +1,4 @@
-import sys, time, os.path, Queue
+import sys, time, os.path, queue
 import serial.tools.list_ports
 from com_monitor import ComMonitorThread
 from livedatafeed import LiveDataFeed
@@ -27,8 +27,8 @@ class ViewPanel(QMainWindow):
         # varibile per avere i dati piu' recenti
         self.livefeed = LiveDataFeed()
         # code per i dati e per gli errori
-        self.data_q = Queue.LifoQueue()
-        self.error_q = Queue.Queue()
+        self.data_q = queue.LifoQueue()
+        self.error_q = queue.Queue()
         # conto alla rovescia
         self.timer = QTimer()
         self.initAction()

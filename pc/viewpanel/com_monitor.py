@@ -1,4 +1,4 @@
-import Queue
+import queue
 import threading
 import time
 import serial
@@ -62,7 +62,7 @@ class ComMonitorThread(threading.Thread):
             if self.serial_port:
                 self.serial_port.close()
             self.serial_port = serial.Serial(**self.serial_arg)
-        except serial.SerialException, e:
+        except e:
             self.error_q.put(e.message)
             return
 
