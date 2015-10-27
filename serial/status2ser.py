@@ -2,6 +2,22 @@
 import serial
 from time import sleep
 
+
+import sys
+import os
+sys.path.insert(0, '../common')
+from atomicwrite import AtomicWrite
+
+
+if not os.path.isfile('/tmp/presetB.txt'):
+	print "File presetB non trovato..."
+	AtomicWrite.writeFile('/tmp/presetB.txt', "0000000000000000")
+if not os.path.isfile('/tmp/presetTXTB.txt'):
+	print "File presetTXTB non trovato..."
+	AtomicWrite.writeFile('/tmp/presetTXTB.txt', ";")
+
+
+
 '''
 
 PER USARE LA PORTA gadget:
@@ -26,13 +42,13 @@ def getFileContent(filename):
 
 def getPreset(radio):
 	print "Leggo i preset"
-        preset = getFileContent("/tmp/radio"+radio+".txt")
+        preset = getFileContent("/tmp/preset"+radio+".txt")
         print "Letto:",preset
         return preset
 
 def getPname(radio):
         print "Leggo i pname"
-        pname = getFileContent("/tmp/"+radio+"pname.txt")
+        pname = getFileContent("/tmp/presetTXT"+radio+".txt")
         print "Letto:",pname
         return pname
 
@@ -56,9 +72,14 @@ def serWrite(T,C):
 
 def getTx(R):
 	print "Leggo trasmissione per radio",R
-	txs = getFileContent("/tmp/tx"+R+".txt")
+	txs = getFileContent("/tmp/tx.txt")
 	print "Letto:",txs
-	return txs
+	if txs == R:
+		return "1"
+	else:
+		return "0"
+	#print "Letto:",txs
+	#return txs
 
 print "Apro porta seriale"
 ser = serial.Serial("/dev/ttyGS0",115200)
@@ -83,11 +104,11 @@ while True:
 	serWrite("BPNAME",BPNAME)
 	serWrite("BAND",BAND)
 	serWrite("RELAY",RELAY)
-        serWrite("ATX",ATX)
-        serWrite("BTX",BTX)
+	serWrite("ATX",ATX)
+	serWrite("BTX",BTX)
 
 	
-	sleep(0.5)
+	sleep(0.3)
 
 
 ser.close()

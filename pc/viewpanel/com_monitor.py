@@ -67,17 +67,17 @@ class ComMonitorThread(threading.Thread):
             return
 
         error_value = False
-        bands = ["6", "10", "12", "15", "17", "20", "30", "40", "60", "80", "160"]
-        apreset = ''
-        bpreset = ''
-        apnametx = ''
-        apnamerx = ''
-        bpnametx = ''
-        bpnamerx = ''
-        band = ''
-        relay = ''
-        atx = ''
-        btx = ''
+        bands = [b'6', b'10', b'12', b'15', b'17', b'20', b'30', b'40', b'60', b'80', b'160']
+        apreset = False
+        bpreset = False
+        apnametx = False
+        apnamerx = False
+        bpnametx = False
+        bpnamerx = False
+        band = False
+        relay = False
+        atx = False
+        btx = False
 
         while self.alive.isSet():
             # Reading 1 byte, followed by whatever is left in the
@@ -85,8 +85,9 @@ class ComMonitorThread(threading.Thread):
             data = self.serial_port.read(1)
             #data += self.serial_port.read(self.serial_port.inWaiting())
             data += self.serial_port.readline()
-            #print "Data: ", data
-            data_list = data.split(':')
+            print("Data: ", data)
+            data_list = data.split(b':')
+            print(data_list)
             if len(data_list) == 2:
                 data_type = data_list[0]
                 data_value = data_list[1].strip()
@@ -95,12 +96,13 @@ class ComMonitorThread(threading.Thread):
                     self.error_q.put("ComMonitorThread: parola chiave errata")
                     error_value = False
 
-                if data_type == 'APRESET':
+                if data_type == b'APRESET':
                     if len(data_value) == 16:
                         for v in data_value:
-                            #print "apreset: " + v
-                            if v != '0' and v != '1':
+                            #print("apreset: " + v)
+                            if v != ord(b'0') and v != ord(b'1'):
                                 error_value = True
+                                print("Errore in APRESET: letto",data_value,v,str(v))
                                 #print "apreset: " + v + " " + str(len(data_value))
                                 break
                     else:
@@ -108,65 +110,70 @@ class ComMonitorThread(threading.Thread):
 
                     if not error_value:
                         apreset = data_value
-                if data_type == 'BPRESET':
+                if data_type == b'BPRESET':
                     if len(data_value) == 16:
                         for v in data_value:
                             #print "bpreset: " + v
-                            if v != '0' and v != '1':
+                            if v != ord(b'0') and v != ord(b'1'):
                                 error_value = True
+                                print("Errore con BPRESET")
                                 #print "bpreset: " + v + " " + str(len(data_value))
                                 break
                     else:
                         error_value = True
                     if not error_value:
                         bpreset = data_value
-                if data_type == 'APNAME':
+                if data_type == b'APNAME':
                     """
                     inserire controllo sui valori, cioe' contare i valori a 1
                     e poi contare i singoli nomi. I due valori devono
                     coincidere
                     """
                     try:
-                        apnamerx, apnametx = data_value.split(';')
+                        apnamerx, apnametx = data_value.split(b';')
                     except:
                         self.error_q.put("ComMonitorThread: errore split APNAME")
-                if data_type == 'BPNAME':
+                if data_type == b'BPNAME':
                     """
                     inserire controllo sui valori, cioe' contare i valori a 1
                     e poi contare i singoli nomi. I due valori devono
                     coincidere
                     """
                     try:
-                        bpnamerx, bpnametx = data_value.split(';')
+                        bpnamerx, bpnametx = data_value.split(b';')
                     except:
                         self.error_q.put("ComMonitorThread: errore split BPNAME")
-                if data_type == 'BAND':
+                if data_type == b'BAND':
                     if data_value in bands:
                         band = data_value
                     else:
+                        print("Errore con BAND",data_value,bands)
                         error_value = True
                         #print "band: " + data_value + " " + type(data_value)
-                if data_type == 'RELAY':
+                if data_type == b'RELAY':
                     if len(data_value) == 24:
                         for v in data_value:
-                            if v != '0' and v != '1':
+                            if v != ord(b'0') and v != ord(b'1'):
                                 error_value = True
                                 #print "relay: " + v + " " + str(len(data_value))
                                 break
                     else:
+                        print("Errore su RELAY")
                         error_value = True
                     if not error_value:
                         relay = data_value
-                if data_type == 'ATX':
-                    if data_value == '0' or data_value == '1':
+                if data_type == b'ATX':
+                    if data_value == b'0' or data_value == b'1':
                         atx = data_value
                     else:
+                        print("Errore su ATX",data_value)
                         #print "atx: " + data_value
                         error_value = True
-                if data_type == 'BTX':
-                    if data_value == '0' or data_value == '1':
+                if data_type == b'BTX':
+                    if data_value == b'0' or data_value == b'1':
                         btx = data_value
                     else:
+                        print("Errore su BTX",data_value)
                         #print "btx: " + data_value
                         error_value = True
                 """
@@ -191,16 +198,17 @@ class ComMonitorThread(threading.Thread):
                 if btx:
                     print "btx ok"
                 """
-                if (apreset and
-                    bpreset and
-                    apnametx and
-                    apnamerx and
-                    bpnametx and
-                    bpnamerx and
-                    band and
-                    relay and
-                    atx and
-                    btx):
+                if (apreset != False and
+                    bpreset != False and
+                    apnametx != False != False and
+                    apnamerx != False and
+                    bpnametx != False and
+                    bpnamerx != False and
+                    band != False and
+                    relay != False and
+                    atx != False and
+                    btx!= False ):
+                    print("Ho tutti i dati")
                     #print "ComMonitorThread: sono dentro, sto per" +
                     #    " creare il dizionario"
                     timestamp = time.time()
@@ -229,10 +237,12 @@ class ComMonitorThread(threading.Thread):
                     atx = ''
                     btx = ''
                     error_value = False
+                else:
+                    print("Manca qualcosa...",apreset,bpreset,apnametx,apnamerx,bpnametx,bpnamerx,band,relay,atx,btx)
             ###
             ### Chiedere ad Enrico per il timeout
             ###
-            time.sleep(1)
+            time.sleep(0.1)
 
         # clean up
         if self.serial_port:
