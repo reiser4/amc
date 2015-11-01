@@ -44,6 +44,7 @@ class ConfigurationPanel(QMainWindow):
         self.statusBar().showMessage("Ready")
 
     def initAction(self):
+        # TODO: sistemare il path delle icone
         # azione per uscire dall'applicazione
         self.exitAction = QAction(
             QIcon(os.path.join("icons", "exit.png")),
@@ -87,7 +88,7 @@ class ConfigurationPanel(QMainWindow):
             QIcon(os.path.join("icons", "upload-configuration2.png")),
             "&Upload configuration",
             self)
-        self.uploadAction2.setShortcut("Ctrl+B")
+        #self.uploadAction2.setShortcut("Ctrl+B")
         self.uploadAction2.setStatusTip("Upload to beaglebone")
         self.uploadAction2.triggered.connect(self.uploadConfiguration)
 
@@ -387,8 +388,7 @@ class ConfigurationPanel(QMainWindow):
                                 self.radio1cb_matrix[self.bands.index(tab)][int(row)][i].setCheckState(Qt.Checked)
                             if relayB[i] == '1':
                                 self.radio2cb_matrix[self.bands.index(tab)][int(row)][i].setCheckState(Qt.Checked)
-            #except Exception e:
-            except e:
+            except Exception as e:
                 QMessageBox.warning(self, 'Errore', str(e))
 
     def uploadConfiguration(self):
@@ -490,7 +490,7 @@ class UploadConfigurationPanel(QDialog):
                 if self.portnum:
                     # Abilito il pulsante per mandare il file
                     self.upload_btn.setEnabled(True)
-            except e: #Exception, e:
+            except Exception as e:
                 QMessageBox.warning(self, 'Errore', str(e))
 
     def uploadFile(self):
@@ -501,15 +501,15 @@ class UploadConfigurationPanel(QDialog):
                 comwrite = ComWrite(self.portnum)
 
                 ### TEST
-                #comwrite = ComWrite("/dev/pts/27")
+                #comwrite = ComWrite("/dev/pts/25")
 
                 comwrite.connect()
                 comwrite.write(self.configuration)
                 self.progressBar.setValue(100)
                 comwrite.close()
                 self.informationMessage('Uploaded', 'File uploaded successfully')
-            except e: #Exception, e:
-                self.criticalMessage('Errore', e.message)
+            except Exception as e:
+                self.criticalMessage('Errore', str(e))
         else:
             self.warningMessage('Error', 'Selezionare una porta ed un file')
 

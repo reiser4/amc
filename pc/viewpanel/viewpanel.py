@@ -47,6 +47,7 @@ class ViewPanel(QMainWindow):
         #self.start_action.setEnabled(True)
 
     def initAction(self):
+        # TODO: sistemare il path delle icone
         # azione per uscire dall'applicazione
         self.exit_action = QAction(
             QIcon(os.path.join("icons", "exit.png")),
@@ -224,7 +225,7 @@ class ViewPanel(QMainWindow):
         """
 
         ### TEST
-        self.portnum = "/dev/pts/26"
+        #self.portnum = "/dev/pts/26"
 
         if self.com_monitor is not None or self.portnum == '':
             return

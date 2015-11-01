@@ -23,7 +23,7 @@ class ComWrite:
                 self.serial_port = serial.Serial(**self.serial_arg)
                 self.isOpen = True
                 #return True
-            except e: #serial.SerialException, e:
+            except: #serial.SerialException, e:
                 raise
                 #return False
 
@@ -36,7 +36,8 @@ class ComWrite:
     def write(self, data):
         if self.isOpen:
             try:
-                self.serial_port.write(data)
+                self.serial_port.write(bytearray(data, 'utf-8'))
+                self.serial_port.flush()
                 #print "Scritto"
                 #return True
             except:
