@@ -123,7 +123,7 @@ class ViewPanel(QMainWindow):
         antenneRX_lbl = QLabel('Antenne:')
         self.antenne_defaultStyleSheet = antenneRX_lbl.styleSheet()
         antenneRX_lbl.setFont(boldfont)
-        presetRX_lbl = QLabel('preset:')
+        presetRX_lbl = QLabel('Preset:')
         presetRX_lbl.setFont(boldfont)
         self.antenneRX_list = list()
         radioRX_layout = QGridLayout()
@@ -224,7 +224,7 @@ class ViewPanel(QMainWindow):
         """
 
         ### TEST
-        #self.portnum = "/dev/pts/27"
+        self.portnum = "/dev/pts/26"
 
         if self.com_monitor is not None or self.portnum == '':
             return
@@ -309,17 +309,24 @@ class ViewPanel(QMainWindow):
             if self.radio == 'A':
                 print("Sono dentro radio A",data,self.nantenne)
                 for i in range(self.nantenne):
-                    if data['apreset'][i] == ord(b'1'):
+                    if data['apreset'] and data['apreset'][i] == ord(b'1'):
                         self.antenneRX_list[i].setStyleSheet("background-color: red;")
                     else:
                         self.antenneRX_list[i].setStyleSheet(self.antenne_defaultStyleSheet)
-                    if data['apreset'][i+8] == ord(b'1'):
+                    if data['apreset'] and data['apreset'][i+8] == ord(b'1'):
                         self.antenneTX_list[i].setStyleSheet("background-color: red;")
                     else:
                         self.antenneTX_list[i].setStyleSheet(self.antenne_defaultStyleSheet)
-                self.presetRX_label.setText(data['apnamerx'].decode("utf-8"))
-                self.presetTX_label.setText(data['apnametx'].decode("utf-8"))
-                if data['atx'] == b'0':
+                # TODO: da controllare
+                if data['apnamerx']:
+                    self.presetRX_label.setText(data['apnamerx'].decode("utf-8"))
+                else:
+                    self.presetRX_label.setText('')
+                if data['apnametx']:
+                    self.presetTX_label.setText(data['apnametx'].decode("utf-8"))
+                else:
+                    self.presetTX_label.setText('')
+                if data['atx'] and data['atx'] == b'0':
                     self.radioRX_groupbox.setStyleSheet("QGroupBox { background-color: yellow; }")
                     self.radioTX_groupbox.setStyleSheet(self.radio_groupbox_defaultStyleSheet)
                 else:
@@ -328,17 +335,24 @@ class ViewPanel(QMainWindow):
             else:
                 #print "Sono dentro radio B"
                 for i in range(self.nantenne):
-                    if data['bpreset'][i] == ord(b'1'):
+                    if data['bpreset'] and data['bpreset'][i] == ord(b'1'):
                         self.antenneRX_list[i].setStyleSheet("background-color: red;")
                     else:
                         self.antenneRX_list[i].setStyleSheet(self.antenne_defaultStyleSheet)
-                    if data['bpreset'][i+8] == ord(b'1'):
+                    if data['bpreset'] and data['bpreset'][i+8] == ord(b'1'):
                         self.antenneRX_list[i].setStyleSheet("background-color: red;")
                     else:
                         self.antenneTX_list[i].setStyleSheet(self.antenne_defaultStyleSheet)
-                self.presetRX_label.setText(data['bpnamerx'])
-                self.presetTX_label.setText(data['bpnametx'])
-                if data['btx'] == b'0':
+                # TODO: da controllare
+                if data['bpnamerx']:
+                    self.presetRX_label.setText(data['bpnamerx'].decode("utf-8"))
+                else:
+                    self.presetRX_label.setText('')
+                if data['bpnametx']:
+                    self.presetTX_label.setText(data['bpnametx'].decode("utf-8"))
+                else:
+                    self.presetTX_label.setText('')
+                if data['btx'] and data['btx'] == b'0':
                     self.radioRX_groupbox.setStyleSheet("QGroupBox { background-color: yellow; }")
                     self.radioTX_groupbox.setStyleSheet(self.radio_groupbox_defaultStyleSheet)
                 else:
@@ -346,7 +360,7 @@ class ViewPanel(QMainWindow):
                     self.radioTX_groupbox.setStyleSheet("QGroupBox { background-color: yellow; }")
             print("Relay",data['relay'])
             for i in range(self.nrelay):
-                if data['relay'][i] == ord(b'1'):
+                if data['relay'] and data['relay'][i] == ord(b'1'):
                     self.relay_list[i].setStyleSheet("background-color: red;")
                 else:
                     self.relay_list[i].setStyleSheet(self.antenne_defaultStyleSheet)

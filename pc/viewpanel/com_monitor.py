@@ -62,8 +62,8 @@ class ComMonitorThread(threading.Thread):
             if self.serial_port:
                 self.serial_port.close()
             self.serial_port = serial.Serial(**self.serial_arg)
-        except e:
-            self.error_q.put(e.message)
+        except Exception as e:
+            self.error_q.put(str(e))
             return
 
         error_value = False
@@ -78,6 +78,8 @@ class ComMonitorThread(threading.Thread):
         relay = False
         atx = False
         btx = False
+        apreset_ok = False
+        bpreset_ok = False
 
         while self.alive.isSet():
             # Reading 1 byte, followed by whatever is left in the
@@ -107,9 +109,9 @@ class ComMonitorThread(threading.Thread):
                                 break
                     else:
                         error_value = True
-
                     if not error_value:
                         apreset = data_value
+                        apreset_ok = True
                 if data_type == b'BPRESET':
                     if len(data_value) == 16:
                         for v in data_value:
@@ -123,6 +125,7 @@ class ComMonitorThread(threading.Thread):
                         error_value = True
                     if not error_value:
                         bpreset = data_value
+                        bpreset_ok = True
                 if data_type == b'APNAME':
                     """
                     inserire controllo sui valori, cioe' contare i valori a 1
@@ -131,6 +134,13 @@ class ComMonitorThread(threading.Thread):
                     """
                     try:
                         apnamerx, apnametx = data_value.split(b';')
+                        if apreset_ok:
+                            len_apname = len(apnamerx.split(b',')) + len(apnametx.split(b','))
+                            len_apresent = sum(list(int(chr(x)) for x in apreset))
+                            if len_apname != len_apresent:
+                                print ("COM_MONITOR: ERRORE len_apname != len_apresent")
+                                # TODO: caso lunghezze diverse
+                                pass
                     except:
                         self.error_q.put("ComMonitorThread: errore split APNAME")
                 if data_type == b'BPNAME':
@@ -141,6 +151,13 @@ class ComMonitorThread(threading.Thread):
                     """
                     try:
                         bpnamerx, bpnametx = data_value.split(b';')
+                        if bpreset_ok:
+                            len_bpname = len(bpnamerx.split(b',')) + len(bpnametx.split(b','))
+                            len_bpresent = sum(list(int(chr(x)) for x in bpreset))
+                            if len_bpname != len_bpresent:
+                                print ("COM_MONITOR: ERRORE len_bpname != len_bpresent")
+                                # TODO: caso lunghezze diverse
+                                pass
                     except:
                         self.error_q.put("ComMonitorThread: errore split BPNAME")
                 if data_type == b'BAND':
@@ -237,6 +254,8 @@ class ComMonitorThread(threading.Thread):
                     atx = ''
                     btx = ''
                     error_value = False
+                    apreset_ok = False
+                    bpreset_ok = False
                 #else:
                     #print("Manca qualcosa...",apreset,bpreset,apnametx,apnamerx,bpnametx,bpnamerx,band,relay,atx,btx)
             ###
