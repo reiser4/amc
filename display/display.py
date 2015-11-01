@@ -16,13 +16,22 @@ if not os.path.isfile('/tmp/band.txt'):
 if not os.path.isfile('/tmp/relay.txt'):
 	print "File relay non trovato..."
 	AtomicWrite.writeFile('/tmp/relay.txt', '0000000000000000000000000')
+if not os.path.isfile('/tmp/presetA.txt'):
+	print "File relay non trovato..."
+	AtomicWrite.writeFile('/tmp/presetA.txt', '0000000000000000')
+if not os.path.isfile('/tmp/presetTXTA.txt'):
+	print "File relay non trovato..."
+	AtomicWrite.writeFile('/tmp/presetTXTA.txt', ';')
+if not os.path.isfile('/tmp/tx.txt'):
+	print "File relay non trovato..."
+	AtomicWrite.writeFile('/tmp/tx.txt', '')
 
 
 def getFileContent(filename):
         txt = open(filename)
         return txt.read()
 
-rg16080b = RG16080B()
+####rg16080b = RG16080B()
 #display = Display("dummy")
 mygfx = Gfx()
 
@@ -52,9 +61,11 @@ while True:
 #        	if data[i] == "1":
 #                	display.setPixel(y,x,True)
 
-	rg16080b.writePixels(data)
+
+	os.system("./MCP23017 "+data)
+	#####rg16080b.writePixels(data)
 	#display.writePng()
 	### attendo
 	
-	sleep(0.1)
+	###sleep(0.1)
 	print "Fine ciclo"
