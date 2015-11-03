@@ -17,7 +17,7 @@ print cmdlines
 components = list(["display", "ioloop", "keyboard", "main", "relay", "sercom"])
 
 for c in components:
-	print "Cerco", c
+	print "Componente", c,"...",
 	running = False
 	for cl in cmdlines:
 		if cl == "python " + c + ".py":
@@ -25,8 +25,8 @@ for c in components:
 	if running:
 		print "Trovato."
 	else:
-		print "Non trovato: eseguo"
+		print "Non trovato: eseguo",
 		cmdline = "cd " + c + " && python " + c + ".py > out.log 2> err.log &"
-		print cmdline
+		print "[",cmdline,"]"
 		os.system(cmdline)
 
