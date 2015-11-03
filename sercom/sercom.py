@@ -1,5 +1,5 @@
   
-from serial import Serial
+import serial
 from time import sleep
 
 
@@ -8,10 +8,21 @@ import os
 sys.path.insert(0, '../common')
 from atomicwrite import AtomicWrite
 
+if not os.path.isfile('/tmp/band.txt'):
+        print "File presetB non trovato..."
+        AtomicWrite.writeFile('/tmp/band.txt', "40")
+
+if not os.path.isfile('/tmp/presetA.txt'):
+        print "File presetB non trovato..."
+        AtomicWrite.writeFile('/tmp/presetA.txt', "0000000000000000")
 
 if not os.path.isfile('/tmp/presetB.txt'):
 	print "File presetB non trovato..."
 	AtomicWrite.writeFile('/tmp/presetB.txt', "0000000000000000")
+if not os.path.isfile('/tmp/presetTXTA.txt'):
+        print "File presetTXTB non trovato..."
+        AtomicWrite.writeFile('/tmp/presetTXTA.txt', ";")
+
 if not os.path.isfile('/tmp/presetTXTB.txt'):
 	print "File presetTXTB non trovato..."
 	AtomicWrite.writeFile('/tmp/presetTXTB.txt', ";")
@@ -83,7 +94,7 @@ def getTx(R):
 	#return txs
 
 print "Apro porta seriale"
-ser = Serial("/dev/ttyGS0",115200)
+ser = serial.Serial("/dev/ttyGS0",115200)
 print "Aperta porta", ser.name
 
 
