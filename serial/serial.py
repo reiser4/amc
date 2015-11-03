@@ -1,5 +1,5 @@
-
-import serial
+  
+from serial import Serial
 from time import sleep
 
 
@@ -83,7 +83,7 @@ def getTx(R):
 	#return txs
 
 print "Apro porta seriale"
-ser = serial.Serial("/dev/ttyGS0",115200)
+ser = Serial("/dev/ttyGS0",115200)
 print "Aperta porta", ser.name
 
 
