@@ -68,4 +68,4 @@ while True:
 	### attendo
 	
 	###sleep(0.1)
-	print "Fine ciclo"
+	##print "Fine ciclo"

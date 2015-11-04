@@ -2,6 +2,7 @@
 import serial
 from time import sleep
 
+import json
 
 import sys
 import os
@@ -26,6 +27,9 @@ if not os.path.isfile('/tmp/presetTXTA.txt'):
 if not os.path.isfile('/tmp/presetTXTB.txt'):
 	print "File presetTXTB non trovato..."
 	AtomicWrite.writeFile('/tmp/presetTXTB.txt', ";")
+if not os.path.isfile('/tmp/relay.txt'):
+        print "File presetTXTB non trovato..."
+        AtomicWrite.writeFile('/tmp/relay.txt', "000000000000000000000000")
 
 
 
@@ -52,40 +56,40 @@ def getFileContent(filename):
 	return txt.read()
 
 def getPreset(radio):
-	print "Leggo i preset"
-        preset = getFileContent("/tmp/preset"+radio+".txt")
-        print "Letto:",preset
-        return preset
+	#print "Leggo i preset"
+    preset = getFileContent("/tmp/preset"+radio+".txt")
+    #print "Letto:",preset
+    return preset
 
 def getPname(radio):
-        print "Leggo i pname"
-        pname = getFileContent("/tmp/presetTXT"+radio+".txt")
-        print "Letto:",pname
-        return pname
+    #print "Leggo i pname"
+    pname = getFileContent("/tmp/presetTXT"+radio+".txt")
+    #print "Letto:",pname
+    return pname
 
 def getBand():
-	print "Leggo la banda"
+	#print "Leggo la banda"
 	band = getFileContent("/tmp/band.txt")
-	print "Letto:",band
+	#print "Letto:",band
 	return band
 
 def getRelay():
-	print "Leggo i relay"
+	#print "Leggo i relay"
 	relay = getFileContent("/tmp/relay.txt")
-	print "Letto:",relay
+	#print "Letto:",relay
 	return relay
 
 def serWrite(T,C):
 	stringa = T + ":" + C + "\n"
 	ser.write(stringa)
-	print "Mando stringa",stringa
+	#print "Mando stringa",stringa
 	with open("/tmp/ser-out.txt", "a") as myfile:
 		myfile.write(stringa)
 
 def getTx(R):
-	print "Leggo trasmissione per radio",R
+	#print "Leggo trasmissione per radio",R
 	txs = getFileContent("/tmp/tx.txt")
-	print "Letto:",txs
+	#print "Letto:",txs
 	if txs == R:
 		return "1"
 	else:
@@ -99,6 +103,18 @@ print "Aperta porta", ser.name
 
 
 while True:
+
+	waiting = ser.inWaiting()
+	if waiting > 0:
+		print "Dati in arrivo!"
+		data = ser.read(waiting)
+		print "Dati ricevuti:",data
+		jsondec = json.loads(data)
+		print "Decodifica JSON:",jsondec
+		AtomicWrite.writeFile('/root/amc/config.json', data)
+		ser.write("CFGACK\n")
+
+
 	# leggo lo stato da temp
 	APRESET = getPreset("A")
 	BPRESET = getPreset("B")
@@ -121,6 +137,7 @@ while True:
 
 	
 	sleep(0.3)
+	print "."
 
 
 ser.close()
