@@ -1,5 +1,7 @@
 import os
 import json
+import traceback
+import time
 import serial
 import serial.tools.list_ports
 from PyQt5.QtWidgets import (QDialog, QHBoxLayout, QVBoxLayout, QLabel,
@@ -77,20 +79,32 @@ class DownloadConfigurationPanel(QDialog):
                 ### TEST
                 #ser = serial.Serial("/dev/pts/26", timeout=3)
 
-                data = ser.read()
+                ser.write("SENDCFG".encode())
+                self.progressBar.setValue(25)
+                time.sleep(1)
+                data = ser.read().decode()
                 waiting = ser.inWaiting()
                 if waiting > 0:
-                    data += ser.read(waiting)
+                    data += ser.read(waiting).decode()
                     self.progressBar.setValue(50)
-                    #print (data)
-                    self.config = json.loads(data.decode("utf-8"))
-                    self.progressBar.setValue(100)
-                    self.informationMessage('Downloaded', 'File downloaded successfully')
+                    print (data)
+                    edata = data.split("\n")
+                    done = False
+                    for line in edata:
+                        if line[:8] == "CFGJSON:":
+                            print ("Carico: "+line[8:])
+                            self.config = json.loads(line[8:])
+                            self.progressBar.setValue(100)
+                            self.informationMessage('Downloaded', 'File downloaded successfully')
+                            done = True
+                    if done == False:
+                        self.progressBar.setValue(0)
+                        self.warningMessage('Error', 'No configuration received...')
                 else:
                     self.warningMessage('Error', 'Errore nella lettura dalla seriale')
                 ser.close()
             except Exception as e:
-                self.criticalMessage('Errore', str(e))
+                self.criticalMessage('Errore', str(e) + str(traceback.format_exc()))
         else:
             self.warningMessage('Error', 'Selezionare una porta')
 

@@ -109,10 +109,14 @@ while True:
         print "Dati in arrivo!"
         data = ser.read(waiting)
         print "Dati ricevuti:",data
-        jsondec = json.loads(data)
-        print "Decodifica JSON:",jsondec
-        AtomicWrite.writeFile('/root/amc/config.json', data)
-        ser.write("CFGACK\n")
+        if data == "SENDCFG":
+            mycfg = getFileContent("/root/amc/config.json").replace("\n","") + "\n"
+            ser.write("CFGJSON:"+mycfg)
+        else:
+            jsondec = json.loads(data)
+            print "Decodifica JSON:",jsondec
+            AtomicWrite.writeFile('/root/amc/config.json', data)
+            ser.write("CFGACK\n")
 
 
     # leggo lo stato da temp
