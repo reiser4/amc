@@ -1,9 +1,6 @@
-
 import serial
 from time import sleep
-
 import json
-
 import sys
 import os
 sys.path.insert(0, '../common')
@@ -32,23 +29,17 @@ if not os.path.isfile('/tmp/relay.txt'):
     AtomicWrite.writeFile('/tmp/relay.txt', "000000000000000000000000")
 
 
-
 '''
-
 PER USARE LA PORTA gadget:
-
 root@beaglebone:/etc# systemctl disable "serial-getty@ttyGS0.service"
 
-
 FORMATO:
-
     APRESET:0001000100010001 (sequenza lunga 16)
     BPRESET:0001000100010001
     APNAME:Africa,Europa,America;Europa (direzioni rx;direzioni tx)
     BPNAME:  "  "  "  "
     BAND:40
     RELAY:100000 (sequenza lunga 24)
-
 '''
 
 def getFileContent(filename):
@@ -101,9 +92,7 @@ print "Apro porta seriale"
 ser = serial.Serial("/dev/ttyGS0",115200)
 print "Aperta porta", ser.name
 
-
 while True:
-
     waiting = ser.inWaiting()
     if waiting > 0:
         print "Dati in arrivo!"
@@ -117,7 +106,6 @@ while True:
             print "Decodifica JSON:",jsondec
             AtomicWrite.writeFile('/root/amc/config.json', data)
             ser.write("CFGACK\n")
-
 
     # leggo lo stato da temp
     APRESET = getPreset("A")
@@ -139,9 +127,7 @@ while True:
     serWrite("ATX",ATX)
     serWrite("BTX",BTX)
 
-
     sleep(0.3)
     print "."
-
 
 ser.close()

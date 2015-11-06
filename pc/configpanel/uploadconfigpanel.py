@@ -53,7 +53,7 @@ class UploadConfigurationPanel(QDialog):
         file_lbl.setFont(boldfont)
         selectfile_layout.addWidget(file_lbl)
         self.selectfile_lbl = QLabel('Nessun file selezionato')
-        
+
         selectfile_layout.addWidget(self.selectfile_lbl)
         selectfile_layout.addStretch(1)
 
@@ -108,7 +108,7 @@ class UploadConfigurationPanel(QDialog):
                     # Abilito il pulsante per mandare il file
                     self.upload_btn.setEnabled(True)
             except Exception as e:
-                QMessageBox.warning(self, 'Errore', str(e))
+                self.warningMessage(self, 'Errore', str(e))
 
     def uploadFile(self):
         #print ("Sono dentro uploadFile")

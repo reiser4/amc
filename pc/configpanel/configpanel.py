@@ -111,7 +111,6 @@ class ConfigurationPanel(QMainWindow):
         UploadAction.triggered.connect()
         """
 
-
     def initMenuBar(self):
         # creo il menu ed aggiungo i vari campi
         menubar = self.menuBar()
@@ -271,7 +270,6 @@ class ConfigurationPanel(QMainWindow):
                 for i in range(self.nrele):
                     self.radio1cb_matrix[indexTab][indexRow-1][i].setEnabled(False)
                     self.radio2cb_matrix[indexTab][indexRow-1][i].setEnabled(False)
-            
 
     def changeCheckBoxState(self, state):
         '''
@@ -368,8 +366,6 @@ class ConfigurationPanel(QMainWindow):
     def saveConf(self, filename):
         jsonconfig = self.createJsonConfiguration()
         AtomicWrite.writeFile(filename, jsonconfig)
-
-
 
     def loadConfigurationFile(self):
         """
