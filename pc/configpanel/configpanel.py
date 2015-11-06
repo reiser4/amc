@@ -271,7 +271,7 @@ class ConfigurationPanel(QMainWindow):
                 for i in range(self.nrele):
                     self.radio1cb_matrix[indexTab][indexRow-1][i].setEnabled(False)
                     self.radio2cb_matrix[indexTab][indexRow-1][i].setEnabled(False)
-            self.saveConf("current.json")
+            
 
     def changeCheckBoxState(self, state):
         '''
@@ -431,6 +431,7 @@ class ConfigurationPanel(QMainWindow):
             QMessageBox.warning(self, 'Errore', str(e))
 
     def uploadConfiguration(self):
+        self.saveConf("current.json")
         uploadConfiguration_panel = UploadConfigurationPanel()
         #uploadConfiguration_panel.show()
         uploadConfiguration_panel.exec_()
