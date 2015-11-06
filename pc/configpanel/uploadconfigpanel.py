@@ -1,6 +1,7 @@
 import os
 import json
 import serial
+import time
 from serial.tools import list_ports
 from PyQt5.QtWidgets import (QDialog, QHBoxLayout, QVBoxLayout, QLabel,
     QComboBox, QPushButton, QProgressBar, QFileDialog, QMessageBox,
@@ -115,16 +116,18 @@ class UploadConfigurationPanel(QDialog):
 
                 ser.write(bytearray(self.configuration, 'utf-8'))
                 ser.flush()
+                self.progressBar.setValue(25)
+                time.sleep(0.5)
                 self.progressBar.setValue(50)
                 data = ser.read()
                 waiting = ser.inWaiting()
                 if waiting > 0:
                     data += ser.read(waiting)
-                    if data == 'CFGACK':
+                    if 'CFGACK' in str(data):
                         self.progressBar.setValue(100)
                         self.informationMessage('Uploaded', 'File uploaded successfully')
                     else:
-                        self.warningMessage('Error', 'Errore nella ricezione del CFGACK')
+                        self.warningMessage('Error', 'Errore nella ricezione del CFGACK'+str(data))
                 else:
                     self.warningMessage('Error', 'Errore nella lettura dalla seriale')
                 ser.close()
