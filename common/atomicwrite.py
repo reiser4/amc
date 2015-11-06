@@ -1,14 +1,15 @@
 import os
 
 class AtomicWrite(object):
-    
+
     @staticmethod
     def writeFile(filename, content):
         tmpfilename = filename + "-tmp"
-        f_tmp = open(tmpfilename, "w")
-        f_tmp.write(content)
-        f_tmp.flush()
-        os.fsync(f_tmp.fileno()) 
-        f_tmp.close()
-
-        os.rename(tmpfilename, filename)
+        if isinstance(content, str):
+            with open(tmpfilename, 'w') as f_tmp:
+                f_tmp.write(content)
+                f_tmp.flush()
+                os.fsync(f_tmp.fileno())
+            os.rename(tmpfilename, filename)
+        else:
+            print ("ERRORE: il valore passato non e' una stringa")
