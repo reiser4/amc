@@ -53,6 +53,7 @@ class UploadConfigurationPanel(QDialog):
         file_lbl.setFont(boldfont)
         selectfile_layout.addWidget(file_lbl)
         self.selectfile_lbl = QLabel('Nessun file selezionato')
+        
         selectfile_layout.addWidget(self.selectfile_lbl)
         selectfile_layout.addStretch(1)
 
@@ -80,6 +81,8 @@ class UploadConfigurationPanel(QDialog):
 
         self.setLayout(main_layout)
 
+        self.loadFile("current.json")
+
     def selectFile(self):
         """
         apre una finestra di selezione in /home dove e' possibile selezionare solo file json
@@ -89,6 +92,9 @@ class UploadConfigurationPanel(QDialog):
         """
         fname = QFileDialog.getOpenFileName(self, 'Select configuration',
                     os.getcwd(), "JSON Files (*.json)")[0]
+        self.loadFile(fname)
+
+    def loadFile(self, fname):
         if fname:
             #print (fname)
             try:

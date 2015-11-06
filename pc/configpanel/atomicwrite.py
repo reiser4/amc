@@ -10,5 +10,7 @@ class AtomicWrite(object):
         f_tmp.flush()
         os.fsync(f_tmp.fileno()) 
         f_tmp.close()
-
+        if os.path.isfile(filename):
+        	#print("File gia` esistente, lo cancello.")
+        	os.remove(filename)
         os.rename(tmpfilename, filename)

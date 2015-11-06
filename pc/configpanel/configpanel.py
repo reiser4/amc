@@ -8,7 +8,8 @@ from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtCore import Qt
 from uploadconfigpanel import UploadConfigurationPanel
 from downloadconfigpanel import DownloadConfigurationPanel
-sys.path.insert(0, '../../common')
+##### uso la versione nella dir. corrente, ottimizzata per windows
+####sys.path.insert(0, '../../common')
 from atomicwrite import AtomicWrite
 
 # grid = [[" " for x in range(5)] for y in range(5)]
@@ -270,6 +271,7 @@ class ConfigurationPanel(QMainWindow):
                 for i in range(self.nrele):
                     self.radio1cb_matrix[indexTab][indexRow-1][i].setEnabled(False)
                     self.radio2cb_matrix[indexTab][indexRow-1][i].setEnabled(False)
+            self.saveConf("current.json")
 
     def changeCheckBoxState(self, state):
         '''
@@ -349,19 +351,25 @@ class ConfigurationPanel(QMainWindow):
         jsonconfig += '\n}}'
         return jsonconfig
 
-    def saveConfigurationFile(self):
+    def saveConfigurationFile(self, filename):
         """
         prendo il primo elemento, cioe' 0 perche' getSaveFileName mi restituisce
         una lista del tipo (u'/home/giulio/workspace/amc/test-config.json',
         u'JSON Files (*.json)')
         """
-        jsonconfig = self.createJsonConfiguration()
         fname = QFileDialog.getSaveFileName(self, 'Save configuration',
                 os.getcwd(), "JSON Files (*.json)")[0]
         if fname:
             #print (fname)
-            AtomicWrite.writeFile(fname, jsonconfig)
+            ###AtomicWrite.writeFile(fname, jsonconfig)
+            self.saveConf(fname)
             #print ("Scrittura eseguita correttamente su file")
+
+    def saveConf(self, filename):
+        jsonconfig = self.createJsonConfiguration()
+        AtomicWrite.writeFile(filename, jsonconfig)
+
+
 
     def loadConfigurationFile(self):
         """
