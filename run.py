@@ -7,14 +7,14 @@ cmdlines = list()
 for pid in pids:
     try:
         cmdline = open(os.path.join('/proc', pid, 'cmdline'), 'rb').read()
-    print cmdline
-    cmdlines.append(cmdline.replace("\x00"," ").strip())
+        #print cmdline
+        cmdlines.append(cmdline.replace("\x00"," ").strip())
     except IOError: # proc has already terminated
         continue
 
-print cmdlines
+#print cmdlines
 
-components = list(["display", "ioloop", "keyboard", "main", "relay", "sercom"])
+components = list(["display", "ioloop", "keyboard", "main", "relay", "sercom", "leds", "band"])
 
 for c in components:
     print "Componente", c,"...",

@@ -54,15 +54,17 @@ def getFileContent(filename):
         return txt.read()
 
 while True:
-	### devo leggere la banda in cui mi trovo e scriverla sull'uscita del BCD.
-	### se necessario aggiornare i rele`, led e display
-	### valutare se rallentare questa operazione
+    ### devo leggere la banda in cui mi trovo e scriverla sull'uscita del BCD.
+    ### se necessario aggiornare i rele`, led e display
+    ### valutare se rallentare questa operazione
 
-	myband = getFileContent("/tmp/band.txt")
-	if myband != lastband:
-		# rilevato cambio banda!
-		##front.changeBand(myband)
-		lastband = myband
+    myband = getFileContent("/tmp/band.txt")
+    if myband != lastband:
+        # rilevato cambio banda!
+        print "Banda cambiata!!",myband
+        #print configuration
+        ##front.changeBand(myband)
+        lastband = myband
 
 	#print "Banda: " + str(myband)
 	
@@ -207,8 +209,25 @@ while True:
 
 	#####print "Configurazione relay: " + relayconfig
 
-	AtomicWrite.writeFile("/tmp/relay.txt",relayconfig)
+    relayconfig = relayconfig[0:18]
+    band = myband
+    if band == "160":
+        relayconfig = relayconfig + "100000"
+    if band == "80":
+        relayconfig = relayconfig + "010000"
+    if band == "40":
+        relayconfig = relayconfig + "001000"
+    if band == "20":
+        relayconfig = relayconfig + "000100"
+    if band == "15":
+        relayconfig = relayconfig + "000010"
+    if band == "10":
+        relayconfig = relayconfig + "000001"
 
+
+    AtomicWrite.writeFile("/tmp/relay.txt",relayconfig)
+    #print relayconfig
+    #print len(relayconfig)
 	####relay.writeRelay(relayconfig)
 
 	#time.sleep(1)

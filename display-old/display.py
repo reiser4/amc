@@ -31,7 +31,7 @@ def getFileContent(filename):
         txt = open(filename)
         return txt.read()
 
-rg16080b = RG16080B()
+####rg16080b = RG16080B()
 #display = Display("dummy")
 mygfx = Gfx()
 
@@ -62,13 +62,10 @@ while True:
 #                	display.setPixel(y,x,True)
 
 
-#	os.system("./MCP23017 "+data)
-	rg16080b.writePixels(data)
-        rg16080b.writePixels(data)
-        rg16080b.writePixels(data)
-        rg16080b.writePixels(data)
+	os.system("./MCP23017 "+data)
+	#####rg16080b.writePixels(data)
 	#display.writePng()
 	### attendo
 	
 	###sleep(0.1)
-	print "Fine ciclo"
+	##print "Fine ciclo"

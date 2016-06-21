@@ -19,7 +19,7 @@ class HandlerKeyboards(object):
         '''
         
         #if usbdevice == "isa0060/serio0/input0":
-        if usbdevice == "usb-musb-hdrc.1.auto-1.1/input1":
+        if usbdevice == "usb-musb-hdrc.1.auto-1.2/input1":
             print "Tastiera 1: " + usbdevice
             self.keyboard = "1"
             self.radio = "A"
