@@ -19,17 +19,17 @@ class HandlerKeyboards(object):
         '''
         
         #if usbdevice == "isa0060/serio0/input0":
-        if usbdevice == "usb-musb-hdrc.1.auto-1.2/input1":
+        if usbdevice == "usb-musb-hdrc.1.auto-1.1/input1":
             print "Tastiera 1: " + usbdevice
             self.keyboard = "1"
             self.radio = "A"
-        elif usbdevice == "usb-musb-hdrc.1.auto-1/input2":
+        elif usbdevice == "usb-musb-hdrc.1.auto-1.2/input1":
             print "Tastiera 2: " + usbdevice
             self.keyboard = "2"
             self.radio = "B"
         else:
             # lanciare eccezione
-            sys.exit("ERRORE: e' stato passatto un usb id sbagliato, fermo il programma")
+            sys.exit("ERRORE: e' stato passato un usb id sbagliato, fermo il programma")
         
         devices = [InputDevice(fn) for fn in list_devices()]
         addressusb = None
@@ -124,14 +124,30 @@ class ReadKeyboard(threading.Thread):
                     ##self.__writeKeystate(f_keystate, "".join(keystate))
 
 
-                    posizione = dict_keystate[str(event.code)]
-                    print "Ricevuta pressione per tasto " + str(posizione)
-                    keystate_list = list(str_keystate)
-                    if str_keystate[posizione] == "1":
-                        keystate_list[posizione] = "0"
+                    if self.radio == "A":
+
+                        posizione = dict_keystate[str(event.code)]
+                        print "Ricevuta pressione per tasto " + str(posizione)
+                        keystate_list = list(str_keystate)
+                        if str_keystate[posizione] == "1":
+                            keystate_list[posizione] = "0"
+                        else:
+                            keystate_list[posizione] = "1"
+                        str_keystate = "".join(keystate_list)
+
                     else:
-                        keystate_list[posizione] = "1"
-                    str_keystate = "".join(keystate_list)
+                        posizione = dict_keystate[str(event.code)]
+                        if posizione < 8:
+                            output = "00000000"
+                            output_list = list(output)
+                            output_list[posizione] = "1"
+                            str_keystate = "".join(output_list) + str_keystate[8:16]
+                        else:
+                            output = "00000000"
+                            output_list = list(output)
+                            output_list[posizione-8] = "1"
+                            str_keystate = str_keystate[0:8] + "".join(output_list) 
+
 
                     print "Nuovo keystate: " + str(str_keystate)
 

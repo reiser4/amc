@@ -32,7 +32,7 @@ class Display:
         png.from_array(self.data, "RGB").save('webroot/display.png')
 
     def writeChar(self, startx, starty, char):
-        for y in range(0,charwidth):
+        for y in range(0,charwidth):    
             for x in range(0,charheight):
                 if font[char][x][y] == 1:
                     self.setPixel(startx+x, starty+y, True)
@@ -55,8 +55,9 @@ class Display:
         elif direction == "v":
             for x in range(startx, startx+npixel):
                 self.setPixel(x, starty, True)
-
+    
     def writeRect(self, startx, starty, width, height):
         ### x e` la colonna, y e` la riga
         for h in xrange(height):
             self.writeLine(startx+h, starty, width, "o")
+

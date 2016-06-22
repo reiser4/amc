@@ -14,18 +14,18 @@ def disableSER():
     writeFile("/sys/class/gpio/gpio48/value","0")
     
 def enableRCLK():
-    writeFile("/sys/class/gpio/gpio51/value","1")
+        writeFile("/sys/class/gpio/gpio51/value","1")
 
 def disableRCLK():
-    writeFile("/sys/class/gpio/gpio51/value","0")
+        writeFile("/sys/class/gpio/gpio51/value","0")
 
 def enableSRCLK():
-    writeFile("/sys/class/gpio/gpio50/value","1")
+        writeFile("/sys/class/gpio/gpio50/value","1")
 
 def disableSRCLK():
-    writeFile("/sys/class/gpio/gpio50/value","0")
+        writeFile("/sys/class/gpio/gpio50/value","0")
 
-
+    
 
 
 def Wait():

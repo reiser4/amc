@@ -11,6 +11,6 @@ class AtomicWrite(object):
                 f_tmp.flush()
                 os.fsync(f_tmp.fileno())
             os.rename(tmpfilename, filename)
-            print "File scritto"
+            #print "File scritto"
         else:
             print ("ERRORE: il valore passato non e' una stringa", filename, content)

@@ -11,9 +11,12 @@ if __name__ == "__main__":
         print "Device trovato: ",dev
 
     #keyboard = HandlerKeyboards("isa0060/serio0/input0")
-    keyboard = HandlerKeyboards("usb-musb-hdrc.1.auto-1.2/input1")
+    #keyboard1 = HandlerKeyboards("usb-musb-hdrc.1.auto-1.1/input1")
+    keyboard2 = HandlerKeyboards("usb-musb-hdrc.1.auto-1.2/input1")
     print "\nIstanziata correttamente tastiera\n"
-    keyboard.startRead()
+    #keyboard1.startRead()
+    keyboard2.startRead()
+    
     while 1:
         sleep(30)
         print "\n####################################################\n"

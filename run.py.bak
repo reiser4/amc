@@ -29,3 +29,4 @@ for c in components:
         cmdline = "cd " + c + " && python " + c + ".py > out.log 2> err.log &"
         print "[",cmdline,"]"
         os.system(cmdline)
+

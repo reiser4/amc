@@ -3,29 +3,29 @@ import time,os
 
 
 def writeFile(filename, byte):
-    out_file = open(filename,"w")
-    out_file.write(byte)
-    out_file.close()
+	out_file = open(filename,"w")
+	out_file.write(byte)
+	out_file.close()
 
 def enableSER():
-    writeFile("/sys/class/gpio/gpio2/value","1")
+	writeFile("/sys/class/gpio/gpio2/value","1")
 
 def disableSER():
-    writeFile("/sys/class/gpio/gpio2/value","0")
-
+	writeFile("/sys/class/gpio/gpio2/value","0")
+	
 def enableRCLK():
-    writeFile("/sys/class/gpio/gpio49/value","1")
+        writeFile("/sys/class/gpio/gpio49/value","1")
 
 def disableRCLK():
-    writeFile("/sys/class/gpio/gpio49/value","0")
+        writeFile("/sys/class/gpio/gpio49/value","0")
 
 def enableSRCLK():
-    writeFile("/sys/class/gpio/gpio3/value","1")
+        writeFile("/sys/class/gpio/gpio3/value","1")
 
 def disableSRCLK():
-    writeFile("/sys/class/gpio/gpio3/value","0")
+        writeFile("/sys/class/gpio/gpio3/value","0")
 
-
+	
 
 
 def Wait():
@@ -33,10 +33,10 @@ def Wait():
     return
 
 class ShiftRegister:
-
+    
     def Write(self,bit_string):
         print "Stringa: ", bit_string
-
+        
         for b in bit_string:
             if int(b) == 1:
                 print "Alzo"
@@ -59,9 +59,9 @@ os.system('echo 49 > /sys/class/gpio/export')
 os.system('echo 2 > /sys/class/gpio/export')
 os.system('echo 3 > /sys/class/gpio/export')
 
-os.system('echo "out" > /sys/class/gpio/gpio2/direction')
-os.system('echo "out" > /sys/class/gpio/gpio3/direction')
-os.system('echo "out" > /sys/class/gpio/gpio49/direction')
+os.system('echo "out" > /sys/class/gpio/gpio2/direction') 
+os.system('echo "out" > /sys/class/gpio/gpio3/direction') 
+os.system('echo "out" > /sys/class/gpio/gpio49/direction') 
 
 sr.Write("100000000000000000000001")
 Wait()

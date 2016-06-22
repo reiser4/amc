@@ -13,12 +13,21 @@ band = "40"
 
 
 
+
 def getFileContent(filename):
         txt = open(filename)
         return txt.read()
 
 upFile = "/sys/devices/ocp.3/helper.12/AIN2"
 downFile = "/sys/devices/ocp.3/helper.12/AIN3"
+
+
+
+if not os.path.isfile(upFile):
+    os.system("echo cape-bone-iio > /sys/devices/bone_capemgr.9/slots")
+    print "AIN abilitati"
+
+AtomicWrite.writeFile('/tmp/band.txt', band)
 
 while True:
 

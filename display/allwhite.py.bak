@@ -9,25 +9,27 @@ mygfx = Gfx()
 count = 0
 while True:
 
-    count += 1
+	count += 1
 
-    #mygfx.setAllWhite()
+	#mygfx.setAllWhite()
 
-    #data = mygfx.getData()
+        #data = mygfx.getData()
 #       for i in range(0,160*80):
 #               y = i / 160
 #               x = i % 160
 #               if data[i] == "1":
 #                       display.setPixel(y,x,True)
 
-    mygfx.writeText(5,5,"test");
+        mygfx.writeText(5,5,"test");
 
-    #mygfx.writeText(5,37,str(count))
+	#mygfx.writeText(5,37,str(count))
 
-    data = mygfx.getData()
+        data = mygfx.getData()
 
-    rg16080b.writePixels(data)
-    #display.writePng()
-    ### attendo
+        rg16080b.writePixels(data)
+        #display.writePng()
+        ### attendo
 
-    print "Fine ciclo"
+        print "Fine ciclo"
+
+
