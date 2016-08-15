@@ -25,5 +25,5 @@ class Preset:
 			#return ord(text)
 			return text
 		else:
-			print "Attenzione: file" + path + "non esistente"
+			#print "Attenzione: file" + path + "non esistente"
 			return "0000000000000000"

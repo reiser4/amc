@@ -1,6 +1,7 @@
 
 import time
 import json
+
 #import Adafruit_BBIO.GPIO as GPIO
 
 from bcdin import BcdIn
@@ -38,25 +39,25 @@ while True:
 		front.changeBand(myband)
 		lastband = myband
 
-	print "Banda: " + str(myband)
+	#print "Banda: " + str(myband)
 	
 	logic = settings.readParam("Logic")
 
-	print "Logica: " + logic
+	#print "Logica: " + logic
 
 
 	presetA = preset.readPresetFile("/tmp/radioA.txt")
 	presetB = preset.readPresetFile("/tmp/radioB.txt")
 
-	print "Preset A: " + presetA
-	print "Preset B: " + presetB
+	#print "Preset A: " + presetA
+	#print "Preset B: " + presetB
 	
 	with open("test-config.json", 'r') as fin:
 		configuration = json.load(fin)
 	#print configuration
 
 	bandconfiguration = configuration['relayconfig'][str(myband)+'m']
-	print bandconfiguration
+	#print bandconfiguration
 
 	#radioArx = "{0:b}".format(preset.readPresetFile("/tmp/radioArx.txt")).zfill(8)
 	#radioAtx = "{0:b}".format(preset.readPresetFile("/tmp/radioAtx.txt")).zfill(8)
@@ -98,8 +99,8 @@ while True:
 				# ora vuole trasmettere la radio A
 				print "Richiesta di TX da Radio A"
 				print "Devo inibire radio B e iniziare la procedura di TX"
-				relay.writeRelay(settings.getPreset("radioAtx"))
-
+				#relay.writeRelay(settings.getPreset("radioAtx"))
+				relayconfig = relay.relayConfigTx(presetA, "A", bandconfiguration)
 			else:	
 				# radio A non vuole trasmettere.
 				if pttB == True:
@@ -108,46 +109,13 @@ while True:
 					# radio B vuole trasmettere
 					print "Richiesta di TX da Radio B"
 					print "Inibisco radio A e faccio procedura TX"
-					relay.writeRelay(settings.getPreset("radioBtx"))
+					relayconfig = relay.relayConfigTx(presetB, "B", bandconfiguration)
+					#relay.writeRelay(settings.getPreset("radioBtx"))
 				else:
 					### ASCOLTO
 					#sia A che B non vogliono trasmettere: ascolto
 
-					relayconfig = list("0" * 24)
-					#devo prendere le prime 8 selezioni per le due radio e attivare i rele corrispondenti
-					pos = 0
-					for sel in presetA[0:8]:
-						print "Controllo preset A in posizione " + str(pos) + ": " + sel
-						if sel == "1":
-							print " attivo! bandconfiguration "
-							print bandconfiguration
-							if str(pos) in bandconfiguration:
-								print "Trovata chiave " + str(pos)
-								relaypos = 0
-								print "Attivo i relay " + bandconfiguration[str(pos)]['relayA']
-								for relay in bandconfiguration[str(pos)]['relayA']:
-									print " verifico " + relay
-									if relay == "1":
-										print " attivo relay in pos. " + str(relaypos)
-										relayconfig[relaypos] = "1"
-									relaypos += 1
-						pos += 1
-
-					for sel in presetB[0:8]:
-						if sel == "1":
-							if pos in bandconfiguration:
-								relaypos = 0
-								for relay in bandconfiguration[pos]['relayB']:
-									if relay == "1":
-										relayconfig[relaypos] = "1"
-									relaypos += 1
-						pos += 1
-
-					print "Relayconfig: " + "".join(relayconfig)
-
-
-
-
+					relayconfig = relay.relayConfigRx(presetA, presetB, bandconfiguration)
 
 					#####relay.writeRelay(settings.getPreset("rx"))
 		else:
@@ -158,7 +126,8 @@ while True:
 				if pttA == False:
 					#A ha appena finito di trasmettere
 					print "Procedura per ripristino ascolto (fine A)"
-					relay.writeRelay(settings.getPreset("rx"))
+					relayconfig = relay.relayConfigRx(presetA, presetB, bandconfiguration)
+					#relay.writeRelay(settings.getPreset("rx"))
 					clear = True
 					txing = ""
 
@@ -166,13 +135,17 @@ while True:
 				# stava trasmettendo B
 				if pttB == False:
 					print "Procedura per ripristino ascolto (fine B)"
-					relay.writeRelay(settings.getPreset("rx"))
+					relayconfig = relay.relayConfigRx(presetA, presetB, bandconfiguration)
+					#relay.writeRelay(settings.getPreset("rx"))
 					clear = True
 					txing = ""		
 
 	else:
 		print "Logica non first-one-wins non implementata."
 
+	print "Configurazione relay: " + relayconfig
+
+	relay.writeRelay(relayconfig)
 
 	time.sleep(1)
 
