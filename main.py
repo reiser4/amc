@@ -1,6 +1,6 @@
 
 import time
-
+import json
 #import Adafruit_BBIO.GPIO as GPIO
 
 from bcdin import BcdIn
@@ -36,31 +36,50 @@ while True:
 	if myband != lastband:
 		# rilevato cambio banda!
 		front.changeBand(myband)
+		lastband = myband
+
+	print "Banda: " + str(myband)
 	
 	logic = settings.readParam("Logic")
 
-	radioArx = "{0:b}".format(preset.readPresetFile("/tmp/radioArx.txt")).zfill(8)
-	radioAtx = "{0:b}".format(preset.readPresetFile("/tmp/radioAtx.txt")).zfill(8)
-	radioBrx = "{0:b}".format(preset.readPresetFile("/tmp/radioBrx.txt")).zfill(8)
-	radioBtx = "{0:b}".format(preset.readPresetFile("/tmp/radioBtx.txt")).zfill(8)
+	print "Logica: " + logic
+
+
+	presetA = preset.readPresetFile("/tmp/radioA.txt")
+	presetB = preset.readPresetFile("/tmp/radioB.txt")
+
+	print "Preset A: " + presetA
+	print "Preset B: " + presetB
+	
+	with open("test-config.json", 'r') as fin:
+		configuration = json.load(fin)
+	#print configuration
+
+	bandconfiguration = configuration['relayconfig'][str(myband)+'m']
+	print bandconfiguration
+
+	#radioArx = "{0:b}".format(preset.readPresetFile("/tmp/radioArx.txt")).zfill(8)
+	#radioAtx = "{0:b}".format(preset.readPresetFile("/tmp/radioAtx.txt")).zfill(8)
+	#radioBrx = "{0:b}".format(preset.readPresetFile("/tmp/radioBrx.txt")).zfill(8)
+	#radioBtx = "{0:b}".format(preset.readPresetFile("/tmp/radioBtx.txt")).zfill(8)
 
 	#todo: solo se preset cambiati
 	
-	front.changePreset("A","rx",radioArx)
-	front.changePreset("A","tx",radioAtx)
-	front.changePreset("B","rx",radioBrx)
-	front.changePreset("B","tx",radioBtx)
+	#front.changePreset("A","rx",radioArx)
+	#front.changePreset("A","tx",radioAtx)
+	#front.changePreset("B","rx",radioBrx)
+	#front.changePreset("B","tx",radioBtx)
 
 	#todo: solo se banda o preset cambiati
 
-	front.updateFront()
+	#front.updateFront()
 
 	#print "Presets: ", radioArx, radioAtx, radioBrx, radioBtx
 
-	settings.setPreset("A","rx",radioArx)
-	settings.setPreset("A","tx",radioAtx)
-	settings.setPreset("B","rx",radioBrx)
-	settings.setPreset("B","tx",radioBtx)
+	#settings.setPreset("A","rx",radioArx)
+	#settings.setPreset("A","tx",radioAtx)
+	#settings.setPreset("B","rx",radioBrx)
+	#settings.setPreset("B","tx",radioBtx)
 	
 
 	pttA = radioa.readPTT()
@@ -91,8 +110,46 @@ while True:
 					print "Inibisco radio A e faccio procedura TX"
 					relay.writeRelay(settings.getPreset("radioBtx"))
 				else:
+					### ASCOLTO
 					#sia A che B non vogliono trasmettere: ascolto
-					relay.writeRelay(settings.getPreset("rx"))
+
+					relayconfig = list("0" * 24)
+					#devo prendere le prime 8 selezioni per le due radio e attivare i rele corrispondenti
+					pos = 0
+					for sel in presetA[0:8]:
+						print "Controllo preset A in posizione " + str(pos) + ": " + sel
+						if sel == "1":
+							print " attivo! bandconfiguration "
+							print bandconfiguration
+							if str(pos) in bandconfiguration:
+								print "Trovata chiave " + str(pos)
+								relaypos = 0
+								print "Attivo i relay " + bandconfiguration[str(pos)]['relayA']
+								for relay in bandconfiguration[str(pos)]['relayA']:
+									print " verifico " + relay
+									if relay == "1":
+										print " attivo relay in pos. " + str(relaypos)
+										relayconfig[relaypos] = "1"
+									relaypos += 1
+						pos += 1
+
+					for sel in presetB[0:8]:
+						if sel == "1":
+							if pos in bandconfiguration:
+								relaypos = 0
+								for relay in bandconfiguration[pos]['relayB']:
+									if relay == "1":
+										relayconfig[relaypos] = "1"
+									relaypos += 1
+						pos += 1
+
+					print "Relayconfig: " + "".join(relayconfig)
+
+
+
+
+
+					#####relay.writeRelay(settings.getPreset("rx"))
 		else:
 			#print "Tx attiva per ", txing
 			# qualcuno trasmetteva
@@ -117,6 +174,6 @@ while True:
 		print "Logica non first-one-wins non implementata."
 
 
-	#time.sleep(1)
+	time.sleep(1)
 
 

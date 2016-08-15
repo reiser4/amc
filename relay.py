@@ -5,7 +5,8 @@ import Adafruit_BBIO.GPIO as GPIO
 ### classe Relay
 # riceve indicazioni su come impostare i vari rele` di uscita
 
-relayPins = ["P8_7","P8_9","P8_11","P8_13","P8_15","P8_17","","","P8_8","P8_10","P8_12","P8_14","P8_16","P8_18","",""]
+#relayPins = ["P8_7","P8_9","P8_11","P8_13","P8_15","P8_17","","","P8_8","P8_10","P8_12","P8_14","P8_16","P8_18","",""]
+relayPins = ["","","","","","","","","","","","","","","","","","","","","","","",""]
 
 for pin in relayPins:
 	if pin != '':

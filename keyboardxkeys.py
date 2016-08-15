@@ -18,11 +18,11 @@ class HandlerKeyboards(object):
         '''
         
         #if usbdevice == "isa0060/serio0/input0":
-        if usbdevice == "usb-musb-hdrc.1.auto-1.2/input1":
+        if usbdevice == "usb-musb-hdrc.1.auto-1/input1":
             print "Tastiera 1: " + usbdevice
             self.keyboard = "1"
             self.radio = "A"
-        elif usbdevice == "usb-musb-hdrc.1.auto-1.2/input2":
+        elif usbdevice == "usb-musb-hdrc.1.auto-1/input2":
             print "Tastiera 2: " + usbdevice
             self.keyboard = "2"
             self.radio = "B"
@@ -74,19 +74,20 @@ class ReadKeyboard(threading.Thread):
     
     def run(self):
         print "##### -> Sono nel thread per l'ascolto della tastiera"
-        filename_keystate = "/tmp/keystate" + self.keyboard + ".txt"
+        filename_keystate = "/tmp/radio" + self.radio + ".txt"
         dict_keystate = { '11': 0, '2': 1, '3': 2, '4': 3, '5': 4, '6': 5, '7': 6, '8': 7, '9': 8, '10': 9, '30': 10, '48': 11, '46': 12, '32': 13, '18': 14, '33': 15}
 
         if os.path.isfile(filename_keystate):
-            print "Il file 'keystate" + self.keyboard + ".txt' esiste,",
+            print "Il file " + filename_keystate + " esiste,",
             f_keystate = open(filename_keystate, "r+")
             str_keystate = self.__readKeystate(f_keystate)
             print "stato: " + str(str_keystate)
             f_keystate.close()
         else:
-            print "Il file 'keystate" + self.keyboard + ".txt' non esiste, lo creo con stato '1000000010000000'"
-            AtomicWrite.writeFile(filename_keystate, "1000000010000000")
-            str_keystate = "1000000010000000"
+            print "Il file "+filename_keystate+" non esiste, lo creo con stato '1000000000000000'"
+            str_keystate = "1000000000000000"
+            AtomicWrite.writeFile(filename_keystate, str_keystate)
+            
 
         filecorrect = True
         for keystate in str_keystate:
@@ -95,15 +96,17 @@ class ReadKeyboard(threading.Thread):
                 break
         n_keystate = len(str_keystate)
         if not filecorrect or n_keystate != 16:
-            print "ERRORE: il file trovato non e' corretto, lo riscrivo con stato '1000000010000000'"
-            AtomicWrite.writeFile(filename_keystate, "1000000010000000")
+            print "ERRORE: il file trovato non e' corretto, lo riscrivo con stato '1000000000000000'"
+            str_keystate = "1000000000000000"
+            AtomicWrite.writeFile(filename_keystate, str_keystate)
 
         print "stato: " + str(str_keystate)
         # divido la stringa di valori in due liste contenti ognuna meta' stringa
-        keystate1 = list(str_keystate[0:(n_keystate/2)])
-        keystate2 = list(str_keystate[(n_keystate/2):])
-        print "keystate1: " + str(keystate1)
-        print "keystate2: " + str(keystate2)
+        #keystate1 = list(str_keystate[0:(n_keystate/2)])
+        #keystate2 = list(str_keystate[(n_keystate/2):])
+        #print "keystate1: " + str(keystate1)
+        #print "keystate2: " + str(keystate2)
+
 
         for event in self.dev.read_loop():
             if event.type == ecodes.EV_KEY and event.value == 0:
@@ -119,6 +122,19 @@ class ReadKeyboard(threading.Thread):
                     ##print str(self.dev.phys) + " Nuovo keystate: " + str(keystate)
                     ##self.__writeKeystate(f_keystate, "".join(keystate))
 
+
+                    posizione = dict_keystate[str(event.code)]
+                    print "Ricevuta pressione per tasto " + str(posizione)
+                    keystate_list = list(str_keystate)
+                    if str_keystate[posizione] == "1":
+                        keystate_list[posizione] = "0"
+                    else:
+                        keystate_list[posizione] = "1"
+                    str_keystate = "".join(keystate_list)
+
+                    print "Nuovo keystate: " + str(str_keystate)
+
+                    '''
                     key_module = dict_keystate[str(event.code)] % (n_keystate/2) #offset tra 0 e 7
                     print "Modulo: ",key_module
                     if dict_keystate[str(event.code)] < (n_keystate/2): #entro 8
@@ -132,7 +148,9 @@ class ReadKeyboard(threading.Thread):
                     keystate = list(keystate1)
                     keystate.extend(keystate2)
                     print str(self.dev.phys) + " Nuovo keystate: " + str(keystate)
-                    AtomicWrite.writeFile("/tmp/radio" + self.radio + type + ".txt", chr(int(ks,2)))
+                    '''
+                    #AtomicWrite.writeFile("/tmp/radio" + self.radio + type + ".txt", chr(int(ks,2)))
+                    AtomicWrite.writeFile("/tmp/radio"+self.radio+".txt",str_keystate)
 
                 except Exception as e:
                     print(e)
