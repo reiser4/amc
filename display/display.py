@@ -71,7 +71,8 @@ while True:
 
 
 #       os.system("./MCP23017 "+data)
-    rg16080b.writePixels(data)
+    AtomicWrite.writeFile('/tmp/display.txt', data)
+    #rg16080b.writePixels(data)
     #rg16080b.writePixels(data)
     #rg16080b.writePixels(data)
     #rg16080b.writePixels(data)

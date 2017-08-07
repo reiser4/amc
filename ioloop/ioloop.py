@@ -16,9 +16,9 @@ if not os.path.isfile('/sys/class/gpio/gpio67/value'):
     os.system('echo 67 > /sys/class/gpio/export')
     os.system('echo "in" > /sys/class/gpio/gpio67/direction') 
 
-APIN = "P9_42" #P9_41
+APIN = "P9_41" #P9_41
 
-GPIO.setup(APIN, GPIO.IN, GPIO.PUD_UP)
+GPIO.setup(APIN, GPIO.IN) #, GPIO.PUD_UP)
 
 #if not os.path.isfile('/sys/class/gpio/gpio77/value'):
 #    #print "Abilito gpio 5..."
@@ -85,7 +85,7 @@ while True:
         txA = "0"
         print "A down"
 
-    txA = "1"
+    #txA = "1"
 
     if int(txA) == 0:
         AtomicWrite.writeFile('/tmp/tx.txt', 'A')

@@ -37,15 +37,16 @@ GPIO.setup("P8_39", GPIO.OUT)
 
 class RG16080B:
     def __init__(self):
-        print "Inizializzo rg16080b con i2c"
+        print "Inizializzo rg16080b con collegamento diretto"
         #self.mcp23017 = MCP23017(1)
         #self.setReset(0)
-        #self.setCS(0)
+        self.setCS(0)
         #self.setReset(1)
         self.reset()
 
         print "Imposto modo 1 1 0 0 1 0"
-        self.setMode(1,1,0,0,1,0)
+        #self.setMode(1,1,0,0,1,0)
+	self.setMode(1,1,0,1,0,0)
 
         print "Pitch caratteri 8"
         self.setChPitch(0,0,0,0,1,1,1)
@@ -109,7 +110,7 @@ class RG16080B:
             i = i + 8
             writecount = writecount + 1
 
-        #print "scritta"
+        print "scritta"
         self.oldsequence = sequence
 
     def setPins(self, rw, rs, db7, db6, db5, db4, db3, db2, db1, db0):

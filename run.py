@@ -14,7 +14,8 @@ for pid in pids:
 
 #print cmdlines
 
-components = list(["display", "ioloop", "keyboard", "main", "relay", "sercom", "leds", "band"])
+components = list(["display", "keyboard", "main", "relay", "sercom", "leds", "band"])
+# "ioloop", 
 
 for c in components:
     print "Componente", c,"...",

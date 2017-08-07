@@ -20,7 +20,6 @@ GPIO.setup("P8_39", GPIO.OUT)
 
 
 
-
 print "abbasso"
 
 GPIO.output("P8_27", GPIO.LOW)
@@ -38,7 +37,7 @@ GPIO.output("P8_38", GPIO.LOW)
 GPIO.output("P8_39", GPIO.LOW)
 
 
-time.sleep(30)
+time.sleep(5)
 print "alzo"
 
 GPIO.output("P8_27", GPIO.HIGH)
@@ -56,5 +55,5 @@ GPIO.output("P8_38", GPIO.HIGH)
 GPIO.output("P8_39", GPIO.HIGH)
 
 
-time.sleep(60)
+time.sleep(5)
 print "fine"

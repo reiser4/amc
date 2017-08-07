@@ -18,8 +18,8 @@ def getFileContent(filename):
         txt = open(filename)
         return txt.read()
 
-upFile = "/sys/devices/ocp.3/helper.12/AIN2"
-downFile = "/sys/devices/ocp.3/helper.12/AIN3"
+upFile = "/sys/devices/ocp.3/helper.16/AIN2"
+downFile = "/sys/devices/ocp.3/helper.16/AIN3"
 
 
 
