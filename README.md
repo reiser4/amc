@@ -93,3 +93,10 @@ RELAY:
 
 CHECK:
 	verifica che tutti i processi siano in esecuzione ed avvia eventuali processi fermi.
+
+===================================
+
+Requisiti software
+
+# apt-get install git
+# pip install Pillow
